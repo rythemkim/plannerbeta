@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I'll WIN CYBER BLACK</title>
+<title>I'll WIN Planner Beta</title>
 
 <style>
 body{
@@ -11,13 +11,12 @@ margin:0;
 background:#000;
 color:#fff;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-overflow-x:hidden;
 }
 .app{
 max-width:430px;
 margin:auto;
 padding:20px;
-padding-bottom:100px;
+padding-bottom:120px;
 }
 .header{
 display:flex;
@@ -29,34 +28,37 @@ margin-bottom:20px;
 font-size:28px;
 font-weight:800;
 font-style:italic;
-letter-spacing:-1px;
+}
+.date-box{
+font-size:13px;
+color:#999;
 }
 .card{
-background:#0a0a0a;
+background:#0b0b0b;
 border:1px solid #1f1f1f;
-border-radius:26px;
-padding:20px;
+border-radius:24px;
+padding:18px;
 margin-bottom:18px;
-box-shadow:0 0 30px rgba(255,255,255,.03);
+box-shadow:0 0 25px rgba(255,255,255,.03);
 }
 .top-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:10px;
 margin-bottom:18px;
 }
-.top-box{
+.mini{
 background:#111;
-border:1px solid #222;
 border-radius:18px;
 padding:16px;
+border:1px solid #222;
 }
-.top-title{
+.mini-title{
 font-size:11px;
-color:#888;
+color:#777;
 margin-bottom:6px;
 }
-.top-value{
+.mini-value{
 font-size:24px;
 font-weight:700;
 }
@@ -70,55 +72,49 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
-z-index:10;
 }
 .total{
 font-size:34px;
 font-weight:700;
 }
-.total-sub{
-font-size:12px;
+.sub{
+font-size:11px;
 color:#777;
-margin-top:5px;
+margin-top:4px;
 }
-.current-routine{
-margin-top:12px;
+.current{
+margin-top:10px;
 font-size:13px;
-color:#9ee7ff;
+color:#79dfff;
 }
 svg{
 width:100%;
 height:100%;
 }
-.hour-label{
+.hour{
 fill:#666;
-font-size:3.4px;
-}
-.routine-label{
-fill:#fff;
-font-size:2.8px;
-pointer-events:none;
-}
-.needle{
-stroke:#fff;
-stroke-width:.45;
-filter:drop-shadow(0 0 4px #fff);
-transition:transform 1s linear;
+font-size:3px;
 }
 .arc{
-cursor:pointer;
 transition:.25s;
+cursor:pointer;
 filter:drop-shadow(0 0 8px rgba(255,255,255,.08));
 }
 .arc.active{
 transform:scale(1.03);
 transform-origin:center;
-filter:drop-shadow(0 0 14px rgba(255,255,255,.35));
+filter:drop-shadow(0 0 14px rgba(255,255,255,.3));
 }
-.list{
-margin-top:16px;
+.routine-label{
+fill:#fff;
+font-size:2.6px;
 }
-.item{
+.needle{
+stroke:#fff;
+stroke-width:.45;
+filter:drop-shadow(0 0 6px #fff);
+}
+.list-item{
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -135,7 +131,6 @@ gap:10px;
 width:12px;
 height:12px;
 border-radius:50%;
-box-shadow:0 0 10px currentColor;
 }
 .subject{
 font-size:14px;
@@ -144,7 +139,7 @@ font-weight:600;
 .time{
 font-size:11px;
 color:#888;
-margin-top:3px;
+margin-top:4px;
 }
 button{
 width:100%;
@@ -156,40 +151,6 @@ color:#000;
 font-weight:700;
 margin-top:14px;
 }
-.quick{
-display:flex;
-gap:8px;
-margin-top:12px;
-overflow:auto;
-}
-.quick-btn{
-padding:8px 12px;
-border-radius:999px;
-background:#151515;
-border:1px solid #222;
-white-space:nowrap;
-font-size:12px;
-}
-.week-row{
-margin-top:12px;
-}
-.bar{
-height:10px;
-background:#171717;
-border-radius:999px;
-overflow:hidden;
-}
-.fill{
-height:100%;
-background:linear-gradient(90deg,#5de0ff,#fff);
-}
-.week-label{
-display:flex;
-justify-content:space-between;
-margin-top:5px;
-font-size:11px;
-color:#888;
-}
 .calendar{
 display:grid;
 grid-template-columns:repeat(7,1fr);
@@ -198,26 +159,20 @@ margin-top:12px;
 }
 .day{
 aspect-ratio:1;
-border-radius:10px;
+border-radius:12px;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 font-size:10px;
+cursor:pointer;
 }
 .day-study{
 font-size:7px;
 margin-top:3px;
 }
-.review{
-width:100%;
-min-height:110px;
-background:#0e0e0e;
-border:none;
-outline:none;
-resize:none;
-color:#fff;
-font-size:14px;
+.selected{
+outline:2px solid #79dfff;
 }
 .modal-bg{
 display:none;
@@ -229,28 +184,33 @@ align-items:center;
 z-index:999;
 }
 .modal{
-background:#101010;
+background:#111;
 width:86%;
 max-width:340px;
 padding:22px;
 border-radius:24px;
 border:1px solid #222;
 }
-.modal input,.modal select{
+.modal input{
 width:100%;
 height:46px;
-margin-bottom:10px;
 background:#000;
-color:#fff;
 border:1px solid #333;
+color:#fff;
 border-radius:12px;
 padding:0 12px;
 box-sizing:border-box;
+margin-bottom:10px;
 }
-.small{
-font-size:11px;
-color:#666;
-margin-top:8px;
+.review{
+width:100%;
+min-height:110px;
+background:#0d0d0d;
+border:none;
+color:#fff;
+resize:none;
+outline:none;
+font-size:14px;
 }
 </style>
 </head>
@@ -261,19 +221,19 @@ margin-top:8px;
 
 <div class="header">
 <div class="logo">I'll WIN</div>
-<div id="clock"></div>
+<div class="date-box" id="todayText"></div>
 </div>
 
 <div class="top-grid">
 
-<div class="top-box">
-<div class="top-title">D-DAY</div>
-<div class="top-value" id="dday">D-0</div>
+<div class="mini">
+<div class="mini-title">D-DAY</div>
+<div class="mini-value">D-32</div>
 </div>
 
-<div class="top-box">
-<div class="top-title">GOAL RATE</div>
-<div class="top-value" id="focus">0%</div>
+<div class="mini">
+<div class="mini-title">GOAL RATE</div>
+<div class="mini-value" id="goalRate">0%</div>
 </div>
 
 </div>
@@ -283,14 +243,14 @@ margin-top:8px;
 <div class="circle-wrap">
 
 <div class="center">
-<div class="total" id="todayTotal">0H 0M</div>
-<div class="total-sub">TODAY STUDY</div>
-<div class="current-routine" id="currentRoutine">현재 루틴 없음</div>
+<div class="total" id="totalStudy">0H 0M</div>
+<div class="sub">TODAY STUDY</div>
+<div class="current" id="currentRoutine">현재 루틴 없음</div>
 </div>
 
 <svg viewBox="0 0 100 100">
 
-<circle cx="50" cy="50" r="38" fill="none" stroke="#121212" stroke-width="18"></circle>
+<circle cx="50" cy="50" r="38" fill="none" stroke="#141414" stroke-width="18"></circle>
 
 <g id="ticks"></g>
 <g id="arcs"></g>
@@ -301,26 +261,15 @@ margin-top:8px;
 
 </div>
 
-<div class="list" id="routineList"></div>
+<div id="routineList"></div>
 
 <button onclick="openModal()">+ 루틴 추가</button>
 
-<div class="quick" id="recentWrap"></div>
-
 </div>
 
 <div class="card">
 
-<div style="font-size:12px;color:#888;margin-bottom:10px;">WEEKLY STUDY</div>
-
-<div id="weekly"></div>
-
-</div>
-
-<div class="card">
-
-<div style="font-size:12px;color:#888;">MONTHLY CALENDAR</div>
-<div id="monthAvg" style="margin-top:8px;font-size:14px;color:#aaa;"></div>
+<div style="font-size:12px;color:#888;">MONTH CALENDAR</div>
 
 <div class="calendar" id="calendar"></div>
 
@@ -330,10 +279,7 @@ margin-top:8px;
 
 <div style="font-size:12px;color:#888;margin-bottom:10px;">TODAY GOAL</div>
 
-<input id="goalInput" placeholder="오늘 목표 입력"
-style="width:100%;height:46px;background:#000;color:#fff;border:1px solid #222;border-radius:14px;padding:0 12px;box-sizing:border-box;">
-
-<div class="small" id="goalText"></div>
+<input id="goalInput" placeholder="오늘 목표 입력">
 
 </div>
 
@@ -352,38 +298,62 @@ style="width:100%;height:46px;background:#000;color:#fff;border:1px solid #222;b
 
 <input id="subject" placeholder="과목">
 
-<input type="time" step="600" id="start">
+<input id="startInput" placeholder="시작시간 (730 → 07:30)">
 
-<input type="time" step="600" id="end">
+<input id="endInput" placeholder="종료시간 (1830 → 18:30)">
 
-<input type="color" id="color" value="#7dd3fc">
-
-<select id="category">
-<option>헌법</option>
-<option>행정학</option>
-<option>경제학</option>
-<option>PSAT</option>
-</select>
+<input type="color" id="color" value="#79dfff">
 
 <button onclick="saveRoutine()">저장</button>
 
-<button id="deleteBtn" onclick="deleteRoutine()" style="background:#ffb6b6;margin-top:8px;">삭제</button>
-
-<button onclick="closeModal()" style="background:#1f1f1f;color:#fff;margin-top:8px;">닫기</button>
+<button onclick="closeModal()" style="background:#222;color:#fff;">닫기</button>
 
 </div>
 </div>
 
 <script>
 
-let routines = JSON.parse(localStorage.getItem('cyber_routines') || '[]');
-let recent = JSON.parse(localStorage.getItem('recent_routines') || '[]');
-let editIndex = -1;
+let selectedDate = new Date().toISOString().split('T')[0];
 
-const goalMinutes = 480;
+let db = JSON.parse(localStorage.getItem('planner_beta_db') || '{}');
+
+if(!db[selectedDate]){
+db[selectedDate] = {
+routines:[],
+goal:'',
+review:''
+};
+}
+
+function currentData(){
+if(!db[selectedDate]){
+db[selectedDate] = {
+routines:[],
+goal:'',
+review:''
+};
+}
+return db[selectedDate];
+}
+
+function formatTime(v){
+
+v = v.replace(/[^0-9]/g,'');
+
+if(v.length===3){
+v='0'+v;
+}
+
+if(v.length===4){
+return v.slice(0,2)+':'+v.slice(2);
+}
+
+return v;
+
+}
 
 function timeToMin(t){
-const [h,m]=t.split(':').map(Number);
+const [h,m] = t.split(':').map(Number);
 return h*60+m;
 }
 
@@ -411,6 +381,7 @@ L ${s.x} ${s.y}
 A 38 38 0 ${large} 1 ${e.x} ${e.y}
 Z
 `;
+
 }
 
 function renderTicks(){
@@ -442,9 +413,7 @@ const text=document.createElementNS('http://www.w3.org/2000/svg','text');
 
 text.setAttribute('x',pos.x);
 text.setAttribute('y',pos.y);
-text.setAttribute('text-anchor','middle');
-text.setAttribute('dominant-baseline','middle');
-text.setAttribute('class','hour-label');
+text.setAttribute('class','hour');
 
 text.textContent=h;
 
@@ -456,7 +425,9 @@ wrap.appendChild(text);
 
 }
 
-function renderRoutines(){
+function renderPlanner(){
+
+const data=currentData();
 
 const arcs=document.getElementById('arcs');
 const list=document.getElementById('routineList');
@@ -468,7 +439,7 @@ let total=0;
 
 const nowMin=new Date().getHours()*60+new Date().getMinutes();
 
-routines.forEach((r,i)=>{
+data.routines.forEach(r=>{
 
 const start=timeToMin(r.start);
 const end=timeToMin(r.end);
@@ -483,23 +454,18 @@ path.setAttribute('class','arc');
 
 if(nowMin>=start && nowMin<end){
 path.classList.add('active');
-document.getElementById('currentRoutine').innerText = r.subject;
+document.getElementById('currentRoutine').innerText=r.subject;
 }
-
-path.onclick=()=>editRoutine(i);
 
 arcs.appendChild(path);
 
 const mid=(start+end)/2;
-
 const pos=polar(50,50,28,mid/1440*360);
 
 const text=document.createElementNS('http://www.w3.org/2000/svg','text');
 
 text.setAttribute('x',pos.x);
 text.setAttribute('y',pos.y);
-text.setAttribute('text-anchor','middle');
-text.setAttribute('dominant-baseline','middle');
 text.setAttribute('class','routine-label');
 
 text.textContent=r.subject;
@@ -507,266 +473,133 @@ text.textContent=r.subject;
 arcs.appendChild(text);
 
 list.innerHTML += `
-<div class="item" onclick="editRoutine(${i})">
-
+<div class="list-item">
 <div class="left">
-
-<div class="dot" style="background:${r.color};color:${r.color};"></div>
-
+<div class="dot" style="background:${r.color}"></div>
 <div>
 <div class="subject">${r.subject}</div>
 <div class="time">${r.start} - ${r.end}</div>
 </div>
-
 </div>
-
 <div>⋯</div>
-
 </div>
 `;
 
 });
 
-document.getElementById('todayTotal').innerText =
+document.getElementById('totalStudy').innerText =
 `${Math.floor(total/60)}H ${total%60}M`;
 
-document.getElementById('focus').innerText =
-Math.round((total/goalMinutes)*100)+'%';
-
-}
-
-function renderRecent(){
-
-const wrap=document.getElementById('recentWrap');
-
-wrap.innerHTML='';
-
-recent.slice(-5).reverse().forEach(v=>{
-
-wrap.innerHTML += `
-<div class="quick-btn" onclick="quickFill('${v}')">${v}</div>
-`;
-
-});
-
-}
-
-function quickFill(v){
-document.getElementById('subject').value=v;
-}
-
-function openModal(){
-
-editIndex=-1;
-
-document.getElementById('modalBg').style.display='flex';
-
-document.getElementById('deleteBtn').style.display='none';
-
-document.getElementById('subject').value='';
-document.getElementById('start').value='';
-document.getElementById('end').value='';
-
-}
-
-function editRoutine(i){
-
-editIndex=i;
-
-const r=routines[i];
-
-document.getElementById('modalBg').style.display='flex';
-
-document.getElementById('deleteBtn').style.display='block';
-
-document.getElementById('subject').value=r.subject;
-document.getElementById('start').value=r.start;
-document.getElementById('end').value=r.end;
-document.getElementById('color').value=r.color;
-
-}
-
-function saveRoutine(){
-
-const subject=document.getElementById('subject').value;
-const start=document.getElementById('start').value;
-const end=document.getElementById('end').value;
-const color=document.getElementById('color').value;
-
-const startMin=timeToMin(start);
-const endMin=timeToMin(end);
-
-const overlap=routines.some((r,idx)=>{
-
-if(idx===editIndex) return false;
-
-const s=timeToMin(r.start);
-const e=timeToMin(r.end);
-
-return startMin<e && endMin>s;
-
-});
-
-if(overlap){
-alert('같은 시간대 루틴이 존재합니다.');
-return;
-}
-
-const obj={subject,start,end,color};
-
-if(editIndex>-1){
-routines[editIndex]=obj;
-}else{
-routines.push(obj);
-}
-
-if(!recent.includes(subject)){
-recent.push(subject);
-}
-
-localStorage.setItem('cyber_routines',JSON.stringify(routines));
-localStorage.setItem('recent_routines',JSON.stringify(recent));
-
-closeModal();
-
-renderRoutines();
-renderRecent();
-
-}
-
-function deleteRoutine(){
-
-routines.splice(editIndex,1);
-
-localStorage.setItem('cyber_routines',JSON.stringify(routines));
-
-closeModal();
-
-renderRoutines();
-
-}
-
-function closeModal(){
-document.getElementById('modalBg').style.display='none';
-}
-
-function updateClock(){
-
-const now=new Date();
-
-const h=String(now.getHours()).padStart(2,'0');
-const m=String(now.getMinutes()).padStart(2,'0');
-
-document.getElementById('clock').innerText=`${h}:${m}`;
-
-const minute=now.getHours()*60+now.getMinutes();
-
-const deg=minute/1440*360;
-
-document.getElementById('needle')
-.setAttribute('transform',`rotate(${deg} 50 50)`);
-
-}
-
-function renderWeekly(){
-
-const weekly=document.getElementById('weekly');
-
-const sample=[430,380,520,310,460,620,500];
-
-sample.forEach((v,i)=>{
-
-const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
-
-weekly.innerHTML += `
-<div class="week-row">
-
-<div class="bar">
-<div class="fill" style="width:${Math.min(v/6,100)}%"></div>
-</div>
-
-<div class="week-label">
-<span>${days[i]}</span>
-<span>${Math.floor(v/60)}H ${v%60}M</span>
-</div>
-
-</div>
-`;
-
-});
-
-}
-
-function getColor(hour){
-
-if(hour>=8) return '#5de0ff';
-if(hour>=6) return '#2f6cff';
-if(hour>=3) return '#1c1c1c';
-
-return '#111';
+document.getElementById('goalRate').innerText =
+Math.round((total/480)*100)+'%';
+
+document.getElementById('goalInput').value = data.goal || '';
+document.getElementById('review').value = data.review || '';
 
 }
 
 function renderCalendar(){
 
 const cal=document.getElementById('calendar');
+cal.innerHTML='';
 
-const now=new Date();
+const now=new Date(selectedDate);
 
 const y=now.getFullYear();
 const m=now.getMonth();
 
 const last=new Date(y,m+1,0).getDate();
 
-let total=0;
-
 for(let d=1;d<=last;d++){
 
-const hour=Math.floor(Math.random()*10);
+const dateKey=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 
-total += hour;
+const study=(db[dateKey]?.routines || []).reduce((a,b)=>{
+
+return a + (timeToMin(b.end)-timeToMin(b.start));
+
+},0);
+
+const hour=Math.floor(study/60);
+
+let bg='#111';
+
+if(hour>=8) bg='#5de0ff';
+else if(hour>=5) bg='#1d4ed8';
+else if(hour>=2) bg='#1e293b';
 
 cal.innerHTML += `
-<div class="day" style="background:${getColor(hour)}">
+<div class="day ${dateKey===selectedDate ? 'selected':''}"
+style="background:${bg}"
+onclick="changeDate('${dateKey}')">
 
 <div>${d}</div>
-
-<div class="day-study">
-${hour}H
-</div>
+<div class="day-study">${hour}H</div>
 
 </div>
 `;
 
 }
 
-document.getElementById('monthAvg').innerText =
-`월 평균 ${(total/last).toFixed(1)}H`;
+}
+
+function changeDate(d){
+
+selectedDate=d;
+
+if(!db[selectedDate]){
+db[selectedDate]={
+routines:[],
+goal:'',
+review:''
+};
+}
+
+document.getElementById('todayText').innerText=selectedDate;
+
+renderPlanner();
+renderCalendar();
 
 }
 
-function updateDDay(){
-
-const target=localStorage.getItem('dday');
-
-if(!target){
-document.getElementById('dday').innerText='D-DAY';
-return;
+function openModal(){
+document.getElementById('modalBg').style.display='flex';
 }
 
-const diff=Math.ceil(
-(new Date(target)-new Date())/(1000*60*60*24)
-);
+function closeModal(){
+document.getElementById('modalBg').style.display='none';
+}
 
-document.getElementById('dday').innerText='D-'+diff;
+function saveRoutine(){
+
+const subject=document.getElementById('subject').value;
+
+const start=formatTime(document.getElementById('startInput').value);
+
+const end=formatTime(document.getElementById('endInput').value);
+
+const color=document.getElementById('color').value;
+
+const data=currentData();
+
+data.routines.push({
+subject,start,end,color
+});
+
+localStorage.setItem('planner_beta_db',JSON.stringify(db));
+
+closeModal();
+
+renderPlanner();
+renderCalendar();
 
 }
 
 document.getElementById('goalInput').addEventListener('input',e=>{
 
-localStorage.setItem('goal_text',e.target.value);
+currentData().goal=e.target.value;
 
-document.getElementById('goalText').innerText=e.target.value;
+localStorage.setItem('planner_beta_db',JSON.stringify(db));
 
 });
 
@@ -775,31 +608,33 @@ document.getElementById('review').addEventListener('input',e=>{
 e.target.style.height='auto';
 e.target.style.height=e.target.scrollHeight+'px';
 
-localStorage.setItem('review_text',e.target.value);
+currentData().review=e.target.value;
+
+localStorage.setItem('planner_beta_db',JSON.stringify(db));
 
 });
 
+function updateNeedle(){
+
+const now=new Date();
+
+const min=now.getHours()*60+now.getMinutes();
+
+const deg=min/1440*360;
+
+document.getElementById('needle')
+.setAttribute('transform',`rotate(${deg} 50 50)`);
+
+}
+
+document.getElementById('todayText').innerText=selectedDate;
+
 renderTicks();
-renderRoutines();
-renderRecent();
-renderWeekly();
+renderPlanner();
 renderCalendar();
-updateClock();
-updateDDay();
+updateNeedle();
 
-document.getElementById('goalInput').value =
-localStorage.getItem('goal_text') || '';
-
-document.getElementById('goalText').innerText =
-localStorage.getItem('goal_text') || '';
-
-document.getElementById('review').value =
-localStorage.getItem('review_text') || '';
-
-setInterval(()=>{
-updateClock();
-renderRoutines();
-},60000);
+setInterval(updateNeedle,60000);
 
 </script>
 
