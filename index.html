@@ -179,6 +179,13 @@ margin-top:3px;
 .selected{
 outline:2px solid #79dfff;
 }
+
+.today{
+background:#79dfff !important;
+color:#000;
+font-weight:700;
+}
+
 .modal-bg{
 display:none;
 position:fixed;
@@ -324,7 +331,24 @@ margin-top:8px;
 
 <input id="endInput" placeholder="종료시간 (1830 → 18:30)">
 
+
 <div id="categoryWrap"></div>
+
+<div style="margin-top:12px;font-size:11px;color:#888;">카테고리 관리</div>
+
+<div style="display:flex;gap:8px;margin-top:8px;">
+<input id="newCategoryName" placeholder="카테고리명"
+style="flex:1;height:42px;background:#000;border:1px solid #333;color:#fff;border-radius:12px;padding:0 10px;">
+
+<input type="color" id="newCategoryColor"
+value="#79dfff"
+style="width:52px;height:42px;padding:0;border:none;background:none;">
+</div>
+
+<button onclick="addCategory()" style="height:42px;margin-top:8px;">
++ 카테고리 추가
+</button>
+
 
 <button onclick="saveRoutine()">저장</button>
 
@@ -369,7 +393,7 @@ let selectedDate = new Date().toISOString().split('T')[0];
 let editIndex = -1;
 let selectedCategory = 0;
 
-const categories = [
+let categories = JSON.parse(localStorage.getItem('planner_categories') || 'null') || [
 {name:'헌법',color:'#79dfff'},
 {name:'행정학',color:'#60a5fa'},
 {name:'경제학',color:'#c084fc'},
@@ -611,7 +635,7 @@ else if(hour>=5) bg='#1d4ed8';
 else if(hour>=2) bg='#1e293b';
 
 cal.innerHTML += `
-<div class="day ${dateKey===selectedDate ? 'selected':''}"
+<div class="day ${dateKey===selectedDate ? 'selected':''} ${dateKey===new Date().toISOString().split('T')[0] ? 'today' : ''}"
 style="background:${bg}"
 onclick="changeDate('${dateKey}')">
 
@@ -652,12 +676,105 @@ onclick="selectCategory(${idx})">
 
 <div>${c.name}</div>
 
+
+<div style="margin-left:auto;display:flex;gap:6px;">
+
+<div onclick="event.stopPropagation();moveCategory(${idx},-1)"
+style="font-size:12px;color:#888;">↑</div>
+
+<div onclick="event.stopPropagation();moveCategory(${idx},1)"
+style="font-size:12px;color:#888;">↓</div>
+
+<div onclick="event.stopPropagation();deleteCategory(${idx})"
+style="font-size:12px;color:#ff8b8b;">✕</div>
+
+</div>
+
 </div>
 `;
 
 });
 
 }
+
+
+
+function saveCategories(){
+localStorage.setItem('planner_categories',JSON.stringify(categories));
+}
+
+function addCategory(){
+
+const name=document.getElementById('newCategoryName').value.trim();
+const color=document.getElementById('newCategoryColor').value;
+
+if(!name) return alert('카테고리명을 입력하세요.');
+
+categories.push({
+name,color
+});
+
+saveCategories();
+
+document.getElementById('newCategoryName').value='';
+
+renderCategories();
+
+}
+
+function deleteCategory(idx){
+
+if(categories.length<=1){
+alert('최소 1개 카테고리가 필요합니다.');
+return;
+}
+
+const removed = categories[idx];
+
+categories.splice(idx,1);
+
+Object.keys(db).forEach(key=>{
+
+if(!db[key]?.routines) return;
+
+db[key].routines.forEach(r=>{
+
+if(r.category===removed.name){
+r.category=categories[0].name;
+r.color=categories[0].color;
+}
+
+});
+
+});
+
+saveCategories();
+saveDB();
+
+if(selectedCategory>=categories.length){
+selectedCategory=0;
+}
+
+renderCategories();
+renderPlanner();
+
+}
+
+function moveCategory(idx,dir){
+
+const target = idx + dir;
+
+if(target<0 || target>=categories.length) return;
+
+[categories[idx],categories[target]] =
+[categories[target],categories[idx]];
+
+saveCategories();
+
+renderCategories();
+
+}
+
 
 function selectCategory(idx){
 
