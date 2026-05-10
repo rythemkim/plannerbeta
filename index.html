@@ -1023,27 +1023,7 @@ document.getElementById('needle')
 }
 
 
-let touchStartX = 0;
 
-document.addEventListener('touchstart',e=>{
-touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend',e=>{
-
-const touchEndX = e.changedTouches[0].screenX;
-
-const diff = touchEndX - touchStartX;
-
-if(Math.abs(diff) < 50) return;
-
-if(diff < 0){
-changeMonth(1);
-}else{
-changeMonth(-1);
-}
-
-});
 
 document.getElementById('todayText').innerText=selectedDate;
 
