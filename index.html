@@ -2,515 +2,357 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>I'll WIN Planner Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circle Timetable</title>
 
 <style>
-:root{
---main-border:#222;
---bg-gray:#f8f8f8;
---today-blue:#00c2ff;
-}
 body{
 margin:0;
-background:var(--bg-gray);
-font-family:Pretendard,sans-serif;
-font-size:13px;
-height:100vh;
-overflow:hidden;
-display:flex;
-flex-direction:column;
-}
-.global-header{
-background:#fff;
-padding:12px 18px;
-border-bottom:1px solid #eee;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-.app-logo{
-font-size:20px;
-font-weight:900;
-font-style:italic;
-}
-.page{
-display:none;
-padding:15px;
-padding-bottom:85px;
-overflow-y:auto;
-background:#fff;
-flex:1;
-max-width:500px;
-width:100%;
-margin:auto;
-box-sizing:border-box;
-}
-.page.active{display:block;}
-.section{
-border:1px solid #222;
-padding:12px;
-margin-bottom:15px;
-background:#fff;
-position:relative;
-}
-.title{
-font-size:10px;
-font-weight:bold;
-border-bottom:1px solid #eee;
-padding-bottom:5px;
-margin-bottom:10px;
-color:#777;
-}
-.nav-bar{
-position:fixed;
-bottom:0;
-left:50%;
-transform:translateX(-50%);
-width:100%;
-max-width:500px;
-height:60px;
-background:#111;
-display:flex;
-}
-.nav-item{
-flex:1;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-font-size:10px;
-color:#777;
-}
-.active-nav{
-background:#222;
-color:#fff;
-}
-.add-btn-sm{
-position:absolute;
-right:8px;
-top:8px;
-font-size:10px;
-padding:4px 8px;
-border:1px solid #ddd;
-background:#f3f3f3;
-}
-.tt-container{
-border:1px solid #eee;
-}
-.tt-row{
-display:flex;
-height:24px;
-border-bottom:1px solid #eee;
-}
-.tt-time{
-width:32px;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:9px;
-background:#fafafa;
-border-right:1px solid #eee;
-}
-.tt-slots{
-flex:1;
-display:grid;
-grid-template-columns:repeat(6,1fr);
-}
-.slot{
-position:relative;
-border-right:1px solid #f5f5f5;
-cursor:pointer;
-}
-.slot-label{
-position:absolute;
-left:2px;
-top:2px;
-font-size:7px;
-white-space:nowrap;
-}
-.stat-row-top{
-display:flex;
-gap:10px;
-}
-.routine-col{
-flex:1.2;
-border:1px solid #222;
-padding:10px;
-position:relative;
-}
-.side-col{
-flex:1;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-.side-box{
-flex:1;
-border:1px solid #222;
-padding:10px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-}
-#routine-svg{
-width:100%;
-height:auto;
-transform:rotate(-90deg);
-}
-.routine-time-label{
-font-size:3px;
-fill:#222;
-transform:rotate(90deg);
-transform-origin:center;
-}
-.list-item{
-display:flex;
-justify-content:space-between;
-padding:8px 0;
-border-bottom:1px dashed #eee;
-font-size:11px;
-}
-.month-card{
 background:#000;
 color:#fff;
-padding:15px;
-text-align:center;
-margin-bottom:15px;
-}
-.calendar-grid{
-display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:4px;
-}
-.cal-day{
-aspect-ratio:1;
-background:#fafafa;
-border-radius:10px;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 display:flex;
-flex-direction:column;
-align-items:center;
 justify-content:center;
-font-size:10px;
 }
-.cal-study{
-font-size:7px;
-margin-top:2px;
-}
-#daily-review{
+
+.app{
 width:100%;
-min-height:80px;
-resize:none;
-border:none;
-outline:none;
-font-size:14px;
-overflow:hidden;
-}
-#modal-overlay{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.7);
-justify-content:center;
-align-items:center;
-z-index:999;
-}
-.modal{
-background:#fff;
-width:85%;
-max-width:320px;
+max-width:430px;
 padding:20px;
-}
-.modal input,.modal select{
-width:100%;
-height:44px;
-margin-bottom:10px;
-padding:0 10px;
 box-sizing:border-box;
 }
-.modal button{
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.title{
+font-size:28px;
+font-weight:800;
+font-style:italic;
+}
+
+.card{
+background:#0d0d0d;
+border:1px solid #222;
+border-radius:24px;
+padding:20px;
+margin-bottom:18px;
+}
+
+.circle-wrap{
+position:relative;
 width:100%;
-padding:12px;
-margin-top:5px;
+aspect-ratio:1;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.center-info{
+position:absolute;
+text-align:center;
+z-index:5;
+}
+
+.center-info .main{
+font-size:34px;
+font-weight:700;
+}
+
+.center-info .sub{
+font-size:12px;
+color:#888;
+margin-top:4px;
+}
+
+svg{
+width:100%;
+height:100%;
+overflow:visible;
+}
+
+.hour-label{
+fill:#666;
+font-size:3.5px;
+}
+
+.time-label{
+fill:#fff;
+font-size:2.8px;
+}
+
+.needle{
+stroke:#fff;
+stroke-width:.5;
+}
+
+.list{
+margin-top:20px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #1c1c1c;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.dot{
+width:12px;
+height:12px;
+border-radius:50%;
+}
+
+.subject{
+font-size:14px;
+font-weight:600;
+}
+
+.time{
+font-size:12px;
+color:#888;
+margin-top:3px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
+}
+
+.stat-box{
+background:#111;
+border-radius:18px;
+padding:16px;
+border:1px solid #222;
+}
+
+.stat-title{
+font-size:11px;
+color:#888;
+margin-bottom:8px;
+}
+
+.stat-value{
+font-size:24px;
+font-weight:700;
+}
+
+.bar-wrap{
+margin-top:10px;
+}
+
+.bar{
+height:10px;
+background:#1d1d1d;
+border-radius:999px;
+overflow:hidden;
+margin-bottom:10px;
+}
+
+.fill{
+height:100%;
+background:#fff;
+border-radius:999px;
+}
+
+.week{
+display:flex;
+justify-content:space-between;
+font-size:11px;
+color:#888;
+margin-top:4px;
 }
 </style>
 </head>
 
 <body>
 
-<header class="global-header">
-<div class="app-logo">I'll WIN</div>
-<input type="date" id="date-picker" onchange="syncDate(this.value)">
-</header>
+<div class="app">
 
-<div id="page1" class="page active">
-
-<div class="section">
-<div class="title">TO-DO LIST</div>
-<div id="todo-list"></div>
+<div class="header">
+<div class="title">I'll WIN</div>
+<div id="clock"></div>
 </div>
 
-<div class="section">
-<div class="title">TIME TABLE</div>
-<button class="add-btn-sm" onclick="openModal('timetable')">ADD</button>
-<div class="tt-container" id="tt-rows"></div>
+<div class="card">
+
+<div class="circle-wrap">
+
+<div class="center-info">
+<div class="main" id="totalStudy">7H 30M</div>
+<div class="sub">TODAY STUDY</div>
 </div>
 
-</div>
+<svg viewBox="0 0 100 100">
 
-<div id="page2" class="page">
+<circle cx="50" cy="50" r="38" fill="none" stroke="#151515" stroke-width="18"/>
 
-<div class="stat-row-top">
+<g id="ticks"></g>
+<g id="arcs"></g>
 
-<div class="routine-col">
-<div class="title">ROUTINE</div>
-<button class="add-btn-sm" onclick="openModal('routine')">+</button>
+<line id="needle"
+x1="50"
+y1="50"
+x2="50"
+y2="12"
+class="needle"
+/>
 
-<svg id="routine-svg" viewBox="0 0 32 32">
-<circle r="16" cx="16" cy="16" fill="#f5f5f5"/>
-<g id="routine-paths"></g>
-<circle r="9" cx="16" cy="16" fill="white"/>
 </svg>
 
-<div id="routine-list-items"></div>
 </div>
 
-<div class="side-col">
-
-<div class="side-box" onclick="openModal('study')">
-<div class="title" style="margin:0;border:none;">STUDY</div>
-<div id="disp-study" style="font-size:18px;font-weight:bold;">00:00</div>
-</div>
+<div class="list" id="routineList"></div>
 
 </div>
 
+<div class="stats">
+
+<div class="stat-box">
+<div class="stat-title">FOCUS</div>
+<div class="stat-value" id="focusVal">94%</div>
 </div>
 
-<div class="section">
-<div class="title">DAILY REVIEW</div>
-<textarea id="daily-review" placeholder="오늘 하루는 어땠나요?"></textarea>
-</div>
-
-</div>
-
-<div id="page3" class="page">
-
-<div class="month-card">
-<div>MONTH TOTAL</div>
-<div id="monthly-study-val" style="font-size:28px;font-weight:bold;">0h 0m</div>
-</div>
-
-<div class="section">
-<div class="title">STUDY CALENDAR</div>
-<div class="calendar-grid" id="calendar-grid"></div>
+<div class="stat-box">
+<div class="stat-title">D-DAY</div>
+<div class="stat-value" id="dday">D-32</div>
 </div>
 
 </div>
 
-<nav class="nav-bar">
-<div class="nav-item active-nav" onclick="switchPage(1,this)">📅 PLAN</div>
-<div class="nav-item" onclick="switchPage(2,this)">📊 STATS</div>
-<div class="nav-item" onclick="switchPage(3,this)">⚙️ CAT</div>
-</nav>
+<div class="card">
 
-<div id="modal-overlay">
-<div class="modal">
-<div id="modal-inputs"></div>
-<button onclick="saveModal()">SAVE</button>
-<button onclick="closeModal()">CANCEL</button>
-<button id="delete-btn" style="display:none;background:#ffd6d6;" onclick="deleteCurrent()">DELETE</button>
+<div class="stat-title">WEEKLY STUDY</div>
+
+<div class="bar-wrap">
+
+<div class="bar"><div class="fill" style="width:82%"></div></div>
+<div class="week">
+<span>MON</span><span>8H</span>
 </div>
+
+<div class="bar"><div class="fill" style="width:65%"></div></div>
+<div class="week">
+<span>TUE</span><span>6H</span>
+</div>
+
+<div class="bar"><div class="fill" style="width:92%"></div></div>
+<div class="week">
+<span>WED</span><span>9H</span>
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
 
-let selectedDate = new Date().toISOString().split('T')[0];
-let currentMode = '';
-let editIdx = -1;
-
-let db = JSON.parse(localStorage.getItem('illWinDB')) || {};
-
-const categories = [
-{name:'전공',color:'#ffadad'},
-{name:'교양',color:'#a0c4ff'},
-{name:'기타',color:'#fdffb6'}
+const routines = [
+{
+subject:'헌법',
+start:'07:00',
+end:'09:00',
+color:'#7dd3fc'
+},
+{
+subject:'행정학',
+start:'10:00',
+end:'13:00',
+color:'#86efac'
+},
+{
+subject:'경제학',
+start:'15:00',
+end:'18:30',
+color:'#fca5a5'
+}
 ];
 
-window.onload = function(){
+const goalStudyMinutes = 480;
 
-document.getElementById('date-picker').value = selectedDate;
-
-for(let i=0;i<6;i++){
-document.getElementById('todo-list').innerHTML += `
-<div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;">
-<input type="checkbox" id="td-c-${i}" onchange="saveCurrentDate()">
-<input type="text" id="td-t-${i}" placeholder="할 일을 입력하세요..." oninput="saveCurrentDate()" style="border:none;outline:none;width:100%;padding-left:10px;">
-</div>`;
+function timeToMinutes(t){
+const [h,m] = t.split(':').map(Number);
+return h*60+m;
 }
 
-document.getElementById('daily-review').addEventListener('input',autoResizeReview);
-
-loadDateData();
-
-}
-
-function getData(){
-
-if(!db[selectedDate]){
-db[selectedDate] = {
-todo:[],
-tt:[],
-routine:[],
-study:'00:00',
-review:''
+function polar(cx,cy,r,deg){
+const rad = (deg-90) * Math.PI / 180;
+return {
+x: cx + r * Math.cos(rad),
+y: cy + r * Math.sin(rad)
 };
 }
 
-return db[selectedDate];
+function describeArc(start,end){
 
+const startAngle = start/1440*360;
+const endAngle = end/1440*360;
+
+const s = polar(50,50,38,startAngle);
+const e = polar(50,50,38,endAngle);
+
+const large = endAngle - startAngle <= 180 ? 0 : 1;
+
+return `
+M 50 50
+L ${s.x} ${s.y}
+A 38 38 0 ${large} 1 ${e.x} ${e.y}
+Z
+`;
 }
 
-function switchPage(p,el){
+function renderTicks(){
 
-document.querySelectorAll('.page').forEach(v=>v.classList.remove('active'));
-document.getElementById('page'+p).classList.add('active');
+const wrap = document.getElementById('ticks');
 
-document.querySelectorAll('.nav-item').forEach(v=>v.classList.remove('active-nav'));
-el.classList.add('active-nav');
+for(let h=0; h<24; h++){
 
-if(p===3){
-renderCalendar();
-}
+const angle = h/24*360;
 
-}
+const outer = polar(50,50,47,angle);
+const inner = polar(50,50,h%2===0 ? 42 : 44,angle);
 
-function syncDate(date){
-selectedDate = date;
-loadDateData();
-}
+const line = document.createElementNS('http://www.w3.org/2000/svg','line');
 
-function loadDateData(){
+line.setAttribute('x1',outer.x);
+line.setAttribute('y1',outer.y);
+line.setAttribute('x2',inner.x);
+line.setAttribute('y2',inner.y);
+line.setAttribute('stroke','#333');
+line.setAttribute('stroke-width',h%2===0 ? '0.5':'0.2');
 
-const data = getData();
+wrap.appendChild(line);
 
-for(let i=0;i<6;i++){
+if(h%2===0){
 
-const item = data.todo[i] || {text:'',checked:false};
+const txtPos = polar(50,50,49,angle);
 
-document.getElementById('td-t-'+i).value = item.text;
-document.getElementById('td-c-'+i).checked = item.checked;
+const text = document.createElementNS('http://www.w3.org/2000/svg','text');
 
-}
+text.setAttribute('x',txtPos.x);
+text.setAttribute('y',txtPos.y);
+text.setAttribute('text-anchor','middle');
+text.setAttribute('dominant-baseline','middle');
+text.setAttribute('class','hour-label');
 
-initTimeTable();
+text.textContent = h;
 
-(data.tt || []).forEach((item,idx)=>{
-fillTT(item,idx);
-});
-
-renderRoutine();
-
-document.getElementById('disp-study').innerText = data.study || '00:00';
-
-document.getElementById('daily-review').value = data.review || '';
-
-autoResizeReview();
-
-renderCalendar();
-updateMonthlyTotal();
-
-}
-
-function saveCurrentDate(){
-
-const data = getData();
-
-data.todo = [];
-
-for(let i=0;i<6;i++){
-data.todo.push({
-text:document.getElementById('td-t-'+i).value,
-checked:document.getElementById('td-c-'+i).checked
-});
-}
-
-data.review = document.getElementById('daily-review').value;
-
-localStorage.setItem('illWinDB',JSON.stringify(db));
-
-}
-
-function initTimeTable(){
-
-const rows = document.getElementById('tt-rows');
-
-rows.innerHTML = '';
-
-for(let h=6;h<=23;h++){
-
-let slots='';
-
-for(let m=0;m<60;m+=10){
-slots += `<div class="slot" id="tt-${h}-${m}" onclick="slotClick(${h},${m})"></div>`;
-}
-
-rows.innerHTML += `
-<div class="tt-row">
-<div class="tt-time">${h}h</div>
-<div class="tt-slots">${slots}</div>
-</div>`;
-
-}
-
-}
-
-function slotClick(h,m){
-
-const data = getData();
-
-const cur = h*60+m;
-
-const idx = data.tt.findIndex(item=>{
-
-const s = item.s.split(':').map(Number);
-const e = item.e.split(':').map(Number);
-
-return cur >= s[0]*60+s[1] && cur < e[0]*60+e[1];
-
-});
-
-if(idx>-1){
-openModal('timetable',idx);
-}
-
-}
-
-function fillTT(item){
-
-const s = item.s.split(':').map(Number);
-const e = item.e.split(':').map(Number);
-
-let first = true;
-
-for(let h=6;h<=23;h++){
-
-for(let m=0;m<60;m+=10){
-
-const cur = h*60+m;
-
-if(cur >= s[0]*60+s[1] && cur < e[0]*60+e[1]){
-
-const el = document.getElementById(`tt-${h}-${m}`);
-
-if(el){
-
-el.style.background = item.color;
-
-if(first){
-el.innerHTML = `<span class="slot-label">${item.desc}</span>`;
-first = false;
-}
+wrap.appendChild(text);
 
 }
 
@@ -518,242 +360,110 @@ first = false;
 
 }
 
-}
+function renderArcs(){
 
-}
-
-function openModal(mode,idx=-1){
-
-currentMode = mode;
-editIdx = idx;
-
-document.getElementById('modal-overlay').style.display = 'flex';
-
-const area = document.getElementById('modal-inputs');
-
-const data = getData();
-
-document.getElementById('delete-btn').style.display = idx>-1 ? 'block':'none';
-
-if(mode==='timetable' || mode==='routine'){
-
-const key = mode==='timetable' ? 'tt':'routine';
-
-const item = idx>-1 ? data[key][idx] : {s:'',e:'',desc:''};
-
-area.innerHTML = `
-<input type="time" step="600" id="m-s" value="${item.s}">
-<input type="time" step="600" id="m-e" value="${item.e}">
-<input type="text" id="m-desc" value="${item.desc || ''}" placeholder="내용">
-<select id="m-cat">
-${categories.map((c,i)=>`<option value="${i}">${c.name}</option>`).join('')}
-</select>`;
-
-}
-
-if(mode==='study'){
-
-area.innerHTML = `
-<input type="text" id="m-study" value="${data.study || ''}" placeholder="730 / 0730 / 07:30">`;
-
-}
-
-}
-
-function saveModal(){
-
-const data = getData();
-
-if(currentMode==='timetable' || currentMode==='routine'){
-
-const key = currentMode==='timetable' ? 'tt':'routine';
-
-const obj = {
-s:document.getElementById('m-s').value,
-e:document.getElementById('m-e').value,
-desc:document.getElementById('m-desc').value,
-color:categories[document.getElementById('m-cat').value].color
-};
-
-if(editIdx>-1){
-data[key][editIdx] = obj;
-}else{
-data[key].push(obj);
-}
-
-}
-
-if(currentMode==='study'){
-
-let val = document.getElementById('m-study').value.replace(/[^0-9]/g,'');
-
-if(val.length===3){
-val = '0'+val;
-}
-
-if(val.length===4){
-val = val.slice(0,2)+':'+val.slice(2);
-}
-
-data.study = val;
-
-}
-
-localStorage.setItem('illWinDB',JSON.stringify(db));
-
-closeModal();
-loadDateData();
-
-}
-
-function deleteCurrent(){
-
-const data = getData();
-
-if(currentMode==='timetable'){
-data.tt.splice(editIdx,1);
-}
-
-if(currentMode==='routine'){
-data.routine.splice(editIdx,1);
-}
-
-localStorage.setItem('illWinDB',JSON.stringify(db));
-
-closeModal();
-loadDateData();
-
-}
-
-function closeModal(){
-document.getElementById('modal-overlay').style.display = 'none';
-}
-
-function drawArc(item){
-
-const s = item.s.split(':').map(Number);
-const e = item.e.split(':').map(Number);
-
-const start = ((s[0]*60+s[1])/1440)*360 - 90;
-const end = ((e[0]*60+e[1])/1440)*360 - 90;
-
-const rad = Math.PI/180;
-
-const x1 = 16 + 16*Math.cos(start*rad);
-const y1 = 16 + 16*Math.sin(start*rad);
-
-const x2 = 16 + 16*Math.cos(end*rad);
-const y2 = 16 + 16*Math.sin(end*rad);
-
-const largeArc = (end-start)>180 ? 1:0;
-
-const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-
-path.setAttribute("d",`M 16 16 L ${x1} ${y1} A 16 16 0 ${largeArc} 1 ${x2} ${y2} Z`);
-path.setAttribute("fill",item.color);
-
-document.getElementById('routine-paths').appendChild(path);
-
-const text = document.createElementNS("http://www.w3.org/2000/svg","text");
-
-text.setAttribute("x","16");
-text.setAttribute("y","4");
-text.setAttribute("class","routine-time-label");
-text.textContent = item.s;
-
-document.getElementById('routine-paths').appendChild(text);
-
-}
-
-function renderRoutine(){
-
-document.getElementById('routine-paths').innerHTML = '';
-
-const list = document.getElementById('routine-list-items');
-
-list.innerHTML = '';
-
-const data = getData();
-
-(data.routine || []).forEach((item,idx)=>{
-
-drawArc(item);
-
-list.innerHTML += `
-<div class="list-item">
-<span onclick="openModal('routine',${idx})">${item.s} ~ ${item.e} | ${item.desc}</span>
-</div>`;
-
-});
-
-}
-
-function autoResizeReview(){
-
-const ta = document.getElementById('daily-review');
-
-ta.style.height = 'auto';
-ta.style.height = ta.scrollHeight + 'px';
-
-saveCurrentDate();
-
-}
-
-function renderCalendar(){
-
-const grid = document.getElementById('calendar-grid');
-
-grid.innerHTML = '';
-
-const [y,m] = selectedDate.split('-').map(Number);
-
-const firstDay = new Date(y,m-1,1).getDay();
-const lastDate = new Date(y,m,0).getDate();
-
-for(let i=0;i<firstDay;i++){
-grid.innerHTML += '<div></div>';
-}
-
-for(let d=1;d<=lastDate;d++){
-
-const dStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-const study = db[dStr]?.study || '00:00';
-
-grid.innerHTML += `
-<div class="cal-day">
-<div>${d}</div>
-<div class="cal-study">${study}</div>
-</div>`;
-
-}
-
-}
-
-function updateMonthlyTotal(){
-
-const target = selectedDate.substring(0,7);
+const wrap = document.getElementById('arcs');
 
 let total = 0;
 
-for(let date in db){
+routines.forEach(r=>{
 
-if(date.startsWith(target)){
+const start = timeToMinutes(r.start);
+const end = timeToMinutes(r.end);
 
-const study = db[date].study || '00:00';
+total += (end-start);
 
-const parts = study.split(':').map(Number);
+const path = document.createElementNS('http://www.w3.org/2000/svg','path');
 
-total += (parts[0]*60)+(parts[1]||0);
+path.setAttribute('d',describeArc(start,end));
+path.setAttribute('fill',r.color);
+
+wrap.appendChild(path);
+
+const mid = (start+end)/2;
+const pos = polar(50,50,30,mid/1440*360);
+
+const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+
+text.setAttribute('x',pos.x);
+text.setAttribute('y',pos.y);
+text.setAttribute('text-anchor','middle');
+text.setAttribute('dominant-baseline','middle');
+text.setAttribute('class','time-label');
+
+text.textContent = r.subject;
+
+wrap.appendChild(text);
+
+});
+
+const h = Math.floor(total/60);
+const m = total%60;
+
+document.getElementById('totalStudy').innerText =
+`${h}H ${m}M`;
+
+const focus = Math.round((total/goalStudyMinutes)*100);
+
+document.getElementById('focusVal').innerText = focus + '%';
 
 }
 
+function renderList(){
+
+const list = document.getElementById('routineList');
+
+routines.forEach(r=>{
+
+list.innerHTML += `
+<div class="item">
+
+<div class="left">
+<div class="dot" style="background:${r.color}"></div>
+
+<div>
+<div class="subject">${r.subject}</div>
+<div class="time">${r.start} - ${r.end}</div>
+</div>
+
+</div>
+
+<div>⋯</div>
+
+</div>
+`;
+
+});
+
 }
 
-document.getElementById('monthly-study-val').innerText =
-`${Math.floor(total/60)}h ${total%60}m`;
+function updateClock(){
+
+const now = new Date();
+
+const h = String(now.getHours()).padStart(2,'0');
+const m = String(now.getMinutes()).padStart(2,'0');
+
+document.getElementById('clock').innerText = `${h}:${m}`;
+
+const minute = now.getHours()*60 + now.getMinutes();
+
+const deg = minute/1440*360;
+
+document.getElementById('needle')
+.setAttribute(
+'transform',
+`rotate(${deg} 50 50)`
+);
 
 }
+
+renderTicks();
+renderArcs();
+renderList();
+updateClock();
+
+setInterval(updateClock,1000);
 
 </script>
 
