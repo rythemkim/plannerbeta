@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I'll WIN Planner</title>
+<title>I'll WIN Planner Beta Calendar+</title>
 
 <style>
 body{
@@ -18,36 +18,20 @@ margin:auto;
 padding:20px;
 padding-bottom:120px;
 }
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
 .logo{
 font-size:28px;
 font-weight:800;
 font-style:italic;
-margin-bottom:20px;
 }
-.calendar{
-display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:6px;
-margin-top:14px;
-}
-.day{
-aspect-ratio:1;
-border-radius:12px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:11px;
-background:#111;
-cursor:pointer;
-position:relative;
-}
-.today{
-background:#79dfff !important;
-color:#000;
-font-weight:700;
-}
-.selected{
-outline:2px solid #79dfff;
+.date-box{
+font-size:13px;
+color:#999;
 }
 .card{
 background:#0b0b0b;
@@ -56,15 +40,84 @@ border-radius:24px;
 padding:18px;
 margin-bottom:18px;
 }
-button{
-width:100%;
-height:46px;
-border:none;
-border-radius:14px;
-background:#fff;
-color:#000;
+.top-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:18px;
+}
+.mini{
+background:#111;
+border-radius:18px;
+padding:16px;
+border:1px solid #222;
+cursor:pointer;
+}
+.mini-title{
+font-size:11px;
+color:#777;
+margin-bottom:6px;
+}
+.mini-value{
+font-size:22px;
 font-weight:700;
-margin-top:12px;
+}
+.mini-sub{
+font-size:11px;
+color:#888;
+margin-top:4px;
+}
+.circle-wrap{
+position:relative;
+aspect-ratio:1;
+}
+.center{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+}
+.total{
+font-size:34px;
+font-weight:700;
+}
+.sub{
+font-size:11px;
+color:#777;
+margin-top:4px;
+}
+.current{
+margin-top:10px;
+font-size:13px;
+color:#79dfff;
+}
+svg{
+width:100%;
+height:100%;
+}
+.hour{
+fill:#666;
+font-size:3px;
+}
+.arc{
+transition:.25s;
+cursor:pointer;
+filter:drop-shadow(0 0 8px rgba(255,255,255,.08));
+}
+.arc.active{
+transform:scale(1.03);
+transform-origin:center;
+filter:drop-shadow(0 0 14px rgba(255,255,255,.3));
+}
+.routine-label{
+fill:#fff;
+font-size:2.6px;
+}
+.needle{
+stroke:#fff;
+stroke-width:.45;
+filter:drop-shadow(0 0 6px #fff);
 }
 .list-item{
 display:flex;
@@ -84,6 +137,55 @@ width:12px;
 height:12px;
 border-radius:50%;
 }
+.subject{
+font-size:14px;
+font-weight:600;
+}
+.time{
+font-size:11px;
+color:#888;
+margin-top:4px;
+}
+button{
+width:100%;
+height:48px;
+border:none;
+border-radius:16px;
+background:#fff;
+color:#000;
+font-weight:700;
+margin-top:14px;
+}
+.calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:5px;
+margin-top:12px;
+}
+.day{
+aspect-ratio:1;
+border-radius:12px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:10px;
+cursor:pointer;
+}
+.day-study{
+font-size:7px;
+margin-top:3px;
+}
+.selected{
+outline:2px solid #79dfff;
+}
+
+.today{
+background:#79dfff !important;
+color:#000;
+font-weight:700;
+}
+
 .modal-bg{
 display:none;
 position:fixed;
@@ -100,8 +202,6 @@ max-width:340px;
 padding:22px;
 border-radius:24px;
 border:1px solid #222;
-max-height:85vh;
-overflow:auto;
 }
 .modal input{
 width:100%;
@@ -114,12 +214,22 @@ padding:0 12px;
 box-sizing:border-box;
 margin-bottom:10px;
 }
+.review{
+width:100%;
+min-height:110px;
+background:#0d0d0d;
+border:none;
+color:#fff;
+resize:none;
+outline:none;
+font-size:14px;
+}
 .category-item{
 display:flex;
 align-items:center;
 gap:10px;
 padding:10px 12px;
-background:#0d0d0d;
+background:#0c0c0c;
 border:1px solid #222;
 border-radius:14px;
 margin-bottom:8px;
@@ -133,21 +243,9 @@ width:12px;
 height:12px;
 border-radius:50%;
 }
-.cat-actions{
-margin-left:auto;
-display:flex;
-gap:10px;
-font-size:12px;
-}
-.review{
-width:100%;
-min-height:100px;
-background:#0d0d0d;
-border:none;
-color:#fff;
-resize:none;
-outline:none;
-font-size:14px;
+.delete-btn{
+background:#ffb4b4;
+margin-top:8px;
 }
 </style>
 </head>
@@ -156,36 +254,49 @@ font-size:14px;
 
 <div class="app">
 
+<div class="header">
 <div class="logo">I'll WIN</div>
-
-<div class="card">
-<div style="font-size:12px;color:#888;">MONTH CALENDAR</div>
-<div class="calendar" id="calendar"></div>
+<div class="date-box" id="todayText"></div>
 </div>
 
-<div class="card">
+<div class="top-grid">
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-<div>
-<div style="font-size:12px;color:#888;">D-DAY</div>
-<div id="ddayText" style="font-size:22px;font-weight:700;">D-DAY</div>
-<div id="ddayLabel" style="font-size:11px;color:#888;">목표 없음</div>
+<div class="mini" onclick="openDDayModal()">
+<div class="mini-title">D-DAY</div>
+<div class="mini-value" id="ddayValue">D-DAY</div>
+<div class="mini-sub" id="ddayLabel">목표 없음</div>
 </div>
 
-<div>
-<div style="font-size:12px;color:#888;">GOAL RATE</div>
-<div id="goalRate" style="font-size:22px;font-weight:700;">0%</div>
+<div class="mini" onclick="openGoalModal()">
+<div class="mini-title">GOAL RATE</div>
+<div class="mini-value" id="goalRate">0%</div>
+<div class="mini-sub" id="goalMinuteText">목표 8H</div>
 </div>
-</div>
-
-<button onclick="openGoalModal()">목표 설정</button>
-<button onclick="openDDayModal()">디데이 설정</button>
 
 </div>
 
 <div class="card">
 
-<div style="font-size:12px;color:#888;margin-bottom:10px;">ROUTINES</div>
+<div class="circle-wrap">
+
+<div class="center">
+<div class="total" id="totalStudy">0H 0M</div>
+<div class="sub">TODAY STUDY</div>
+<div class="current" id="currentRoutine">현재 루틴 없음</div>
+</div>
+
+<svg viewBox="0 0 100 100">
+
+<circle cx="50" cy="50" r="38" fill="none" stroke="#141414" stroke-width="18"></circle>
+
+<g id="ticks"></g>
+<g id="arcs"></g>
+
+<line id="needle" x1="50" y1="50" x2="50" y2="10" class="needle"></line>
+
+</svg>
+
+</div>
 
 <div id="routineList"></div>
 
@@ -195,9 +306,17 @@ font-size:14px;
 
 <div class="card">
 
+<div style="font-size:12px;color:#888;">MONTH CALENDAR</div>
+
+<div class="calendar" id="calendar"></div>
+
+</div>
+
+<div class="card">
+
 <div style="font-size:12px;color:#888;margin-bottom:10px;">DAILY REVIEW</div>
 
-<textarea id="review" class="review"></textarea>
+<textarea class="review" id="review"></textarea>
 
 </div>
 
@@ -207,27 +326,35 @@ font-size:14px;
 <div class="modal">
 
 <input id="subject" placeholder="과목">
-<input id="startInput" placeholder="730 → 07:30">
-<input id="endInput" placeholder="1830 → 18:30">
+
+<input id="startInput" placeholder="시작시간 (730 → 07:30)">
+
+<input id="endInput" placeholder="종료시간 (1830 → 18:30)">
+
 
 <div id="categoryWrap"></div>
 
-<div style="font-size:11px;color:#888;margin-top:10px;">카테고리 관리</div>
+<div style="margin-top:12px;font-size:11px;color:#888;">카테고리 관리</div>
 
-<input id="newCategoryName" placeholder="카테고리명">
+<div style="display:flex;gap:8px;margin-top:8px;">
+<input id="newCategoryName" placeholder="카테고리명"
+style="flex:1;height:42px;background:#000;border:1px solid #333;color:#fff;border-radius:12px;padding:0 10px;">
 
-<input type="color" id="newCategoryColor" value="#79dfff"
-style="width:100%;height:46px;padding:4px;">
+<input type="color" id="newCategoryColor"
+value="#79dfff"
+style="width:52px;height:42px;padding:0;border:none;background:none;">
+</div>
 
-<button onclick="addCategory()">+ 카테고리 추가</button>
+<button onclick="addCategory()" style="height:42px;margin-top:8px;">
++ 카테고리 추가
+</button>
+
 
 <button onclick="saveRoutine()">저장</button>
 
-<button onclick="deleteRoutine()" id="deleteRoutineBtn"
-style="background:#ffb4b4;">삭제</button>
+<button class="delete-btn" id="deleteRoutineBtn" onclick="deleteRoutine()">삭제</button>
 
-<button onclick="closeModal('routineModal')"
-style="background:#222;color:#fff;">닫기</button>
+<button onclick="closeModal('routineModal')" style="background:#222;color:#fff;">닫기</button>
 
 </div>
 </div>
@@ -235,12 +362,11 @@ style="background:#222;color:#fff;">닫기</button>
 <div class="modal-bg" id="goalModal">
 <div class="modal">
 
-<input id="goalInput" placeholder="일일 목표 공부시간(분)">
+<input id="goalInput" placeholder="일일 목표 공부시간 (분)">
 
 <button onclick="saveGoal()">저장</button>
 
-<button onclick="closeModal('goalModal')"
-style="background:#222;color:#fff;">닫기</button>
+<button onclick="closeModal('goalModal')" style="background:#222;color:#fff;">닫기</button>
 
 </div>
 </div>
@@ -254,12 +380,9 @@ style="background:#222;color:#fff;">닫기</button>
 
 <button onclick="saveDDay()">저장</button>
 
-<button onclick="deleteDDay()" style="background:#ffb4b4;">
-삭제
-</button>
+<button onclick="deleteDDay()" class="delete-btn">삭제</button>
 
-<button onclick="closeModal('ddayModal')"
-style="background:#222;color:#fff;">닫기</button>
+<button onclick="closeModal('ddayModal')" style="background:#222;color:#fff;">닫기</button>
 
 </div>
 </div>
@@ -277,7 +400,7 @@ let categories = JSON.parse(localStorage.getItem('planner_categories') || 'null'
 {name:'PSAT',color:'#34d399'}
 ];
 
-let db = JSON.parse(localStorage.getItem('planner_db_fixed') || '{}');
+let db = JSON.parse(localStorage.getItem('planner_beta_calendar_plus') || '{}');
 
 if(!db.settings){
 db.settings = {
@@ -300,17 +423,9 @@ return db[selectedDate];
 
 }
 
-function saveDB(){
-localStorage.setItem('planner_db_fixed',JSON.stringify(db));
-}
-
-function saveCategories(){
-localStorage.setItem('planner_categories',JSON.stringify(categories));
-}
-
 function formatTime(v){
 
-v=v.replace(/[^0-9]/g,'');
+v = v.replace(/[^0-9]/g,'');
 
 if(v.length===3){
 v='0'+v;
@@ -325,104 +440,150 @@ return v;
 }
 
 function timeToMin(t){
-const [h,m]=t.split(':').map(Number);
+const [h,m] = t.split(':').map(Number);
 return h*60+m;
 }
 
-function renderCalendar(){
+function polar(cx,cy,r,deg){
+const rad=(deg-90)*Math.PI/180;
+return {
+x:cx+r*Math.cos(rad),
+y:cy+r*Math.sin(rad)
+};
+}
 
-const cal=document.getElementById('calendar');
+function arcPath(start,end){
 
-cal.innerHTML='';
+const sa=start/1440*360;
+const ea=end/1440*360;
 
-const now = new Date(selectedDate);
+const s=polar(50,50,38,sa);
+const e=polar(50,50,38,ea);
 
-const y=now.getFullYear();
-const m=now.getMonth();
+const large=ea-sa<=180?0:1;
 
-const last=new Date(y,m+1,0).getDate();
-
-const today = new Date().toISOString().split('T')[0];
-
-for(let d=1; d<=last; d++){
-
-const dateKey =
-`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-const cls = `
-day
-${dateKey===today ? 'today':''}
-${dateKey===selectedDate ? 'selected':''}
-`;
-
-cal.innerHTML += `
-<div class="${cls}"
-onclick="changeDate('${dateKey}')">
-${d}
-</div>
+return `
+M 50 50
+L ${s.x} ${s.y}
+A 38 38 0 ${large} 1 ${e.x} ${e.y}
+Z
 `;
 
 }
 
+function renderTicks(){
+
+const wrap=document.getElementById('ticks');
+
+for(let h=0;h<24;h++){
+
+const angle=h/24*360;
+
+const outer=polar(50,50,47,angle);
+const inner=polar(50,50,h%2===0?42:44,angle);
+
+const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+
+line.setAttribute('x1',outer.x);
+line.setAttribute('y1',outer.y);
+line.setAttribute('x2',inner.x);
+line.setAttribute('y2',inner.y);
+line.setAttribute('stroke','#333');
+
+wrap.appendChild(line);
+
+if(h%2===0){
+
+const pos=polar(50,50,49,angle);
+
+const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+
+text.setAttribute('x',pos.x);
+text.setAttribute('y',pos.y);
+text.setAttribute('class','hour');
+
+text.textContent=h;
+
+wrap.appendChild(text);
+
 }
 
-function changeDate(date){
-
-selectedDate=date;
-
-renderCalendar();
-renderRoutines();
+}
 
 }
 
-function renderRoutines(){
-
-const list=document.getElementById('routineList');
-
-list.innerHTML='';
+function renderPlanner(){
 
 const data=currentData();
 
+const arcs=document.getElementById('arcs');
+const list=document.getElementById('routineList');
+
+arcs.innerHTML='';
+list.innerHTML='';
+
 let total=0;
+
+const nowMin=new Date().getHours()*60+new Date().getMinutes();
 
 data.routines.forEach((r,idx)=>{
 
-total += timeToMin(r.end)-timeToMin(r.start);
+const start=timeToMin(r.start);
+const end=timeToMin(r.end);
+
+total += (end-start);
+
+const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+
+path.setAttribute('d',arcPath(start,end));
+path.setAttribute('fill',r.color);
+path.setAttribute('class','arc');
+
+if(nowMin>=start && nowMin<end){
+path.classList.add('active');
+document.getElementById('currentRoutine').innerText=r.subject;
+}
+
+arcs.appendChild(path);
+
+const mid=(start+end)/2;
+const pos=polar(50,50,28,mid/1440*360);
+
+const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+
+text.setAttribute('x',pos.x);
+text.setAttribute('y',pos.y);
+text.setAttribute('class','routine-label');
+
+text.textContent=r.subject;
+
+arcs.appendChild(text);
 
 list.innerHTML += `
 <div class="list-item" onclick="editRoutine(${idx})">
-
 <div class="left">
-
-<div class="dot"
-style="background:${r.color}">
-</div>
-
+<div class="dot" style="background:${r.color}"></div>
 <div>
-
-<div style="font-weight:600;">
-${r.subject}
+<div class="subject">${r.subject}</div>
+<div class="time">${r.start} - ${r.end}</div>
 </div>
-
-<div style="font-size:11px;color:#888;margin-top:4px;">
-${r.start} - ${r.end}
 </div>
-
-</div>
-
-</div>
-
-<div style="font-size:12px;color:${r.color};">
-${r.category}
-</div>
-
+<div style="color:${r.color};font-size:12px;">${r.category}</div>
 </div>
 `;
 
 });
 
+document.getElementById('totalStudy').innerText =
+`${Math.floor(total/60)}H ${total%60}M`;
+
 document.getElementById('goalRate').innerText =
 Math.round((total/db.settings.goalMinutes)*100)+'%';
+
+document.getElementById('goalMinuteText').innerText =
+`목표 ${Math.floor(db.settings.goalMinutes/60)}H`;
+
+document.getElementById('review').value = data.review || '';
 
 renderDDay();
 
@@ -431,19 +592,71 @@ renderDDay();
 function renderDDay(){
 
 if(!db.settings.ddayDate){
-document.getElementById('ddayText').innerText='D-DAY';
+document.getElementById('ddayValue').innerText='D-DAY';
 document.getElementById('ddayLabel').innerText='목표 없음';
 return;
 }
 
 const diff=Math.ceil(
-(new Date(db.settings.ddayDate)-new Date())/
-(1000*60*60*24)
+(new Date(db.settings.ddayDate)-new Date())/(1000*60*60*24)
 );
 
-document.getElementById('ddayText').innerText='D-'+diff;
-document.getElementById('ddayLabel').innerText=
-db.settings.ddayTitle;
+document.getElementById('ddayValue').innerText='D-'+diff;
+document.getElementById('ddayLabel').innerText=db.settings.ddayTitle;
+
+}
+
+function renderCalendar(){
+
+const cal=document.getElementById('calendar');
+cal.innerHTML='';
+
+const now=new Date(selectedDate);
+
+const y=now.getFullYear();
+const m=now.getMonth();
+
+const last=new Date(y,m+1,0).getDate();
+
+for(let d=1;d<=last;d++){
+
+const dateKey=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+const study=(db[dateKey]?.routines || []).reduce((a,b)=>{
+return a + (timeToMin(b.end)-timeToMin(b.start));
+},0);
+
+const hour=Math.floor(study/60);
+
+let bg='#111';
+
+if(hour>=8) bg='#5de0ff';
+else if(hour>=5) bg='#1d4ed8';
+else if(hour>=2) bg='#1e293b';
+
+cal.innerHTML += `
+<div class="day ${dateKey===selectedDate ? 'selected':''} ${dateKey===new Date().toISOString().split('T')[0] ? 'today' : ''}"
+style="background:${bg}"
+onclick="changeDate('${dateKey}')">
+
+<div>${d}</div>
+<div class="day-study">${hour}H</div>
+
+</div>
+`;
+
+}
+
+}
+
+function changeDate(d){
+
+selectedDate=d;
+
+document.getElementById('todayText').innerText=selectedDate;
+
+renderPlanner();
+renderCalendar();
 
 }
 
@@ -459,26 +672,21 @@ wrap.innerHTML += `
 <div class="category-item ${selectedCategory===idx ? 'active':''}"
 onclick="selectCategory(${idx})">
 
-<div class="category-dot"
-style="background:${c.color}">
-</div>
+<div class="category-dot" style="background:${c.color}"></div>
 
 <div>${c.name}</div>
 
-<div class="cat-actions">
 
-<div onclick="event.stopPropagation();moveCategory(${idx},-1)">
-↑
-</div>
+<div style="margin-left:auto;display:flex;gap:6px;">
 
-<div onclick="event.stopPropagation();moveCategory(${idx},1)">
-↓
-</div>
+<div onclick="event.stopPropagation();moveCategory(${idx},-1)"
+style="font-size:12px;color:#888;">↑</div>
+
+<div onclick="event.stopPropagation();moveCategory(${idx},1)"
+style="font-size:12px;color:#888;">↓</div>
 
 <div onclick="event.stopPropagation();deleteCategory(${idx})"
-style="color:#ff8b8b;">
-✕
-</div>
+style="font-size:12px;color:#ff8b8b;">✕</div>
 
 </div>
 
@@ -489,12 +697,10 @@ style="color:#ff8b8b;">
 
 }
 
-function selectCategory(idx){
 
-selectedCategory=idx;
 
-renderCategories();
-
+function saveCategories(){
+localStorage.setItem('planner_categories',JSON.stringify(categories));
 }
 
 function addCategory(){
@@ -502,12 +708,11 @@ function addCategory(){
 const name=document.getElementById('newCategoryName').value.trim();
 const color=document.getElementById('newCategoryColor').value;
 
-if(!name){
-alert('카테고리명을 입력하세요.');
-return;
-}
+if(!name) return alert('카테고리명을 입력하세요.');
 
-categories.push({name,color});
+categories.push({
+name,color
+});
 
 saveCategories();
 
@@ -524,23 +729,13 @@ alert('최소 1개 카테고리가 필요합니다.');
 return;
 }
 
-const ok = confirm(
-`"${categories[idx].name}" 카테고리를 삭제할까요?\n기존 루틴은 기본 카테고리로 변경됩니다.`
-);
-
-if(!ok){
-return;
-}
-
 const removed = categories[idx];
 
 categories.splice(idx,1);
 
 Object.keys(db).forEach(key=>{
 
-if(!db[key]?.routines){
-return;
-}
+if(!db[key]?.routines) return;
 
 db[key].routines.forEach(r=>{
 
@@ -556,25 +751,34 @@ r.color=categories[0].color;
 saveCategories();
 saveDB();
 
+if(selectedCategory>=categories.length){
 selectedCategory=0;
+}
 
 renderCategories();
-renderRoutines();
+renderPlanner();
 
 }
 
 function moveCategory(idx,dir){
 
-const target=idx+dir;
+const target = idx + dir;
 
-if(target<0 || target>=categories.length){
-return;
-}
+if(target<0 || target>=categories.length) return;
 
 [categories[idx],categories[target]] =
 [categories[target],categories[idx]];
 
 saveCategories();
+
+renderCategories();
+
+}
+
+
+function selectCategory(idx){
+
+selectedCategory=idx;
 
 renderCategories();
 
@@ -612,18 +816,17 @@ document.getElementById('subject').value=r.subject;
 document.getElementById('startInput').value=r.start;
 document.getElementById('endInput').value=r.end;
 
-selectedCategory=
-categories.findIndex(v=>v.name===r.category);
+selectedCategory=categories.findIndex(v=>v.name===r.category);
 
-if(selectedCategory<0){
-selectedCategory=0;
-}
+if(selectedCategory<0) selectedCategory=0;
 
 renderCategories();
 
 }
 
 function saveRoutine(){
+
+const data=currentData();
 
 const category=categories[selectedCategory];
 
@@ -636,22 +839,25 @@ category:category.name
 };
 
 if(editIndex>-1){
-currentData().routines[editIndex]=obj;
+data.routines[editIndex]=obj;
 }else{
-currentData().routines.push(obj);
+data.routines.push(obj);
 }
 
 saveDB();
 
 closeModal('routineModal');
 
-renderRoutines();
+renderPlanner();
+renderCalendar();
 
 }
 
 function deleteRoutine(){
 
-if(editIndex<0){
+const confirmDelete = confirm('이 루틴을 삭제할까요?');
+
+if(!confirmDelete){
 return;
 }
 
@@ -661,7 +867,8 @@ saveDB();
 
 closeModal('routineModal');
 
-renderRoutines();
+renderPlanner();
+renderCalendar();
 
 }
 
@@ -683,7 +890,7 @@ saveDB();
 
 closeModal('goalModal');
 
-renderRoutines();
+renderPlanner();
 
 }
 
@@ -732,6 +939,10 @@ function closeModal(id){
 document.getElementById(id).style.display='none';
 }
 
+function saveDB(){
+localStorage.setItem('planner_beta_calendar_plus',JSON.stringify(db));
+}
+
 document.getElementById('review').addEventListener('input',e=>{
 
 e.target.style.height='auto';
@@ -743,8 +954,27 @@ saveDB();
 
 });
 
+function updateNeedle(){
+
+const now=new Date();
+
+const min=now.getHours()*60+now.getMinutes();
+
+const deg=min/1440*360;
+
+document.getElementById('needle')
+.setAttribute('transform',`rotate(${deg} 50 50)`);
+
+}
+
+document.getElementById('todayText').innerText=selectedDate;
+
+renderTicks();
+renderPlanner();
 renderCalendar();
-renderRoutines();
+updateNeedle();
+
+setInterval(updateNeedle,60000);
 
 </script>
 
