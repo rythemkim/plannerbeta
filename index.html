@@ -162,6 +162,14 @@ grid-template-columns:repeat(7,1fr);
 gap:5px;
 margin-top:12px;
 }
+
+.weekday{
+text-align:center;
+font-size:10px;
+color:#666;
+padding-bottom:6px;
+}
+
 .day{
 aspect-ratio:1;
 border-radius:12px;
@@ -306,7 +314,18 @@ margin-top:8px;
 
 <div class="card">
 
+
+<div style="display:flex;justify-content:space-between;align-items:center;">
 <div style="font-size:12px;color:#888;">MONTH CALENDAR</div>
+
+<div style="display:flex;gap:12px;align-items:center;">
+<div onclick="changeMonth(-1)" style="cursor:pointer;color:#79dfff;">‹</div>
+<div id="monthLabel" style="font-size:12px;color:#aaa;"></div>
+<div onclick="changeMonth(1)" style="cursor:pointer;color:#79dfff;">›</div>
+</div>
+
+</div>
+
 
 <div class="calendar" id="calendar"></div>
 
@@ -606,17 +625,43 @@ document.getElementById('ddayLabel').innerText=db.settings.ddayTitle;
 
 }
 
+
+let currentMonthDate = new Date();
+
 function renderCalendar(){
 
 const cal=document.getElementById('calendar');
 cal.innerHTML='';
 
-const now=new Date(selectedDate);
+const now=currentMonthDate;
 
 const y=now.getFullYear();
 const m=now.getMonth();
 
+document.getElementById('monthLabel').innerText =
+`${y}.${String(m+1).padStart(2,'0')}`;
+
+const weekdays=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+weekdays.forEach(v=>{
+
+cal.innerHTML += `
+<div class="weekday">${v}</div>
+`;
+
+});
+
+const firstDay = new Date(y,m,1).getDay();
+
 const last=new Date(y,m+1,0).getDate();
+
+for(let i=0;i<firstDay;i++){
+
+cal.innerHTML += `<div></div>`;
+
+}
+
+const today = new Date().toISOString().split('T')[0];
 
 for(let d=1;d<=last;d++){
 
@@ -635,7 +680,7 @@ else if(hour>=5) bg='#1d4ed8';
 else if(hour>=2) bg='#1e293b';
 
 cal.innerHTML += `
-<div class="day ${dateKey===selectedDate ? 'selected':''} ${dateKey===new Date().toISOString().split('T')[0] ? 'today' : ''}"
+<div class="day ${dateKey===selectedDate ? 'selected':''} ${dateKey===today ? 'today' : ''}"
 style="background:${bg}"
 onclick="changeDate('${dateKey}')">
 
@@ -649,9 +694,39 @@ onclick="changeDate('${dateKey}')">
 
 }
 
+function changeMonth(diff){
+
+currentMonthDate.setMonth(currentMonthDate.getMonth()+diff);
+
+renderCalendar();
+
+}
 function changeDate(d){
 
 selectedDate=d;
+
+
+let touchStartX = 0;
+
+document.addEventListener('touchstart',e=>{
+touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend',e=>{
+
+const touchEndX = e.changedTouches[0].screenX;
+
+const diff = touchEndX - touchStartX;
+
+if(Math.abs(diff) < 50) return;
+
+if(diff < 0){
+changeMonth(1);
+}else{
+changeMonth(-1);
+}
+
+});
 
 document.getElementById('todayText').innerText=selectedDate;
 
@@ -966,6 +1041,29 @@ document.getElementById('needle')
 .setAttribute('transform',`rotate(${deg} 50 50)`);
 
 }
+
+
+let touchStartX = 0;
+
+document.addEventListener('touchstart',e=>{
+touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend',e=>{
+
+const touchEndX = e.changedTouches[0].screenX;
+
+const diff = touchEndX - touchStartX;
+
+if(Math.abs(diff) < 50) return;
+
+if(diff < 0){
+changeMonth(1);
+}else{
+changeMonth(-1);
+}
+
+});
 
 document.getElementById('todayText').innerText=selectedDate;
 
