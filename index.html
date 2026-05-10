@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Circle Timetable</title>
+<title>I'll WIN Ultimate</title>
 
 <style>
 body{
@@ -11,169 +11,212 @@ margin:0;
 background:#000;
 color:#fff;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-display:flex;
-justify-content:center;
 }
-
 .app{
-width:100%;
 max-width:430px;
+margin:auto;
 padding:20px;
-box-sizing:border-box;
+padding-bottom:100px;
 }
-
 .header{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:20px;
 }
-
-.title{
+.logo{
 font-size:28px;
 font-weight:800;
 font-style:italic;
 }
-
 .card{
-background:#0d0d0d;
-border:1px solid #222;
+background:#0c0c0c;
+border:1px solid #1e1e1e;
 border-radius:24px;
 padding:20px;
 margin-bottom:18px;
 }
-
 .circle-wrap{
 position:relative;
-width:100%;
 aspect-ratio:1;
-display:flex;
-justify-content:center;
-align-items:center;
 }
-
-.center-info{
+.center{
 position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
 text-align:center;
-z-index:5;
+z-index:10;
 }
-
-.center-info .main{
+.center-main{
 font-size:34px;
 font-weight:700;
 }
-
-.center-info .sub{
+.center-sub{
 font-size:12px;
 color:#888;
 margin-top:4px;
 }
-
 svg{
 width:100%;
 height:100%;
-overflow:visible;
 }
-
 .hour-label{
-fill:#666;
+fill:#777;
 font-size:3.5px;
 }
-
-.time-label{
+.routine-label{
 fill:#fff;
 font-size:2.8px;
 }
-
 .needle{
 stroke:#fff;
 stroke-width:.5;
 }
-
-.list{
-margin-top:20px;
-}
-
-.item{
+.list-item{
 display:flex;
 justify-content:space-between;
-align-items:center;
 padding:12px 0;
-border-bottom:1px solid #1c1c1c;
+border-bottom:1px solid #1a1a1a;
+cursor:pointer;
 }
-
 .left{
 display:flex;
-align-items:center;
 gap:10px;
+align-items:center;
 }
-
 .dot{
 width:12px;
 height:12px;
 border-radius:50%;
 }
-
 .subject{
 font-size:14px;
 font-weight:600;
 }
-
 .time{
-font-size:12px;
+font-size:11px;
 color:#888;
 margin-top:3px;
 }
-
 .stats{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
-margin-top:18px;
 }
-
 .stat-box{
-background:#111;
+background:#101010;
 border-radius:18px;
 padding:16px;
 border:1px solid #222;
 }
-
 .stat-title{
 font-size:11px;
 color:#888;
 margin-bottom:8px;
 }
-
 .stat-value{
 font-size:24px;
 font-weight:700;
 }
-
-.bar-wrap{
-margin-top:10px;
+.goal{
+margin-top:15px;
+font-size:13px;
+color:#ccc;
 }
-
 .bar{
 height:10px;
-background:#1d1d1d;
+background:#1b1b1b;
 border-radius:999px;
 overflow:hidden;
-margin-bottom:10px;
+margin-top:10px;
 }
-
 .fill{
 height:100%;
 background:#fff;
-border-radius:999px;
 }
-
-.week{
+.week-row{
+margin-top:12px;
+}
+.week-label{
 display:flex;
 justify-content:space-between;
 font-size:11px;
 color:#888;
 margin-top:4px;
+}
+.calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:5px;
+margin-top:10px;
+}
+.day{
+background:#111;
+border-radius:10px;
+aspect-ratio:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:10px;
+}
+.day-study{
+font-size:7px;
+color:#aaa;
+margin-top:3px;
+}
+button{
+background:#fff;
+color:#000;
+border:none;
+padding:12px;
+border-radius:14px;
+font-weight:700;
+width:100%;
+margin-top:14px;
+}
+.modal-bg{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+.modal{
+background:#111;
+width:85%;
+max-width:320px;
+padding:20px;
+border-radius:20px;
+border:1px solid #222;
+}
+.modal input,.modal select{
+width:100%;
+height:44px;
+margin-bottom:10px;
+background:#000;
+color:#fff;
+border:1px solid #333;
+border-radius:10px;
+padding:0 10px;
+box-sizing:border-box;
+}
+.review{
+width:100%;
+min-height:100px;
+background:#0e0e0e;
+border:none;
+color:#fff;
+resize:none;
+outline:none;
+font-size:14px;
+}
+.small{
+font-size:11px;
+color:#777;
 }
 </style>
 </head>
@@ -183,7 +226,7 @@ margin-top:4px;
 <div class="app">
 
 <div class="header">
-<div class="title">I'll WIN</div>
+<div class="logo">I'll WIN</div>
 <div id="clock"></div>
 </div>
 
@@ -191,31 +234,27 @@ margin-top:4px;
 
 <div class="circle-wrap">
 
-<div class="center-info">
-<div class="main" id="totalStudy">7H 30M</div>
-<div class="sub">TODAY STUDY</div>
+<div class="center">
+<div class="center-main" id="todayTotal">0H 0M</div>
+<div class="center-sub">TODAY STUDY</div>
 </div>
 
 <svg viewBox="0 0 100 100">
 
-<circle cx="50" cy="50" r="38" fill="none" stroke="#151515" stroke-width="18"/>
+<circle cx="50" cy="50" r="38" fill="none" stroke="#141414" stroke-width="18"></circle>
 
 <g id="ticks"></g>
 <g id="arcs"></g>
 
-<line id="needle"
-x1="50"
-y1="50"
-x2="50"
-y2="12"
-class="needle"
-/>
+<line id="needle" x1="50" y1="50" x2="50" y2="10" class="needle"></line>
 
 </svg>
 
 </div>
 
-<div class="list" id="routineList"></div>
+<div id="routineList"></div>
+
+<button onclick="openModal()">+ 루틴 추가</button>
 
 </div>
 
@@ -223,13 +262,23 @@ class="needle"
 
 <div class="stat-box">
 <div class="stat-title">FOCUS</div>
-<div class="stat-value" id="focusVal">94%</div>
+<div class="stat-value" id="focus">0%</div>
+<div class="small">목표 기반 집중도</div>
 </div>
 
 <div class="stat-box">
 <div class="stat-title">D-DAY</div>
-<div class="stat-value" id="dday">D-32</div>
+<div class="stat-value" id="ddayVal">D-0</div>
+<input type="date" id="ddayInput" onchange="saveDDay()">
 </div>
+
+</div>
+
+<div class="card">
+
+<div class="stat-title">TODAY GOAL</div>
+<input id="goalInput" placeholder="오늘 목표 입력" style="width:100%;height:44px;background:#000;color:#fff;border:1px solid #222;border-radius:12px;padding:0 12px;box-sizing:border-box;">
+<div class="goal" id="goalText"></div>
 
 </div>
 
@@ -237,76 +286,78 @@ class="needle"
 
 <div class="stat-title">WEEKLY STUDY</div>
 
-<div class="bar-wrap">
-
-<div class="bar"><div class="fill" style="width:82%"></div></div>
-<div class="week">
-<span>MON</span><span>8H</span>
-</div>
-
-<div class="bar"><div class="fill" style="width:65%"></div></div>
-<div class="week">
-<span>TUE</span><span>6H</span>
-</div>
-
-<div class="bar"><div class="fill" style="width:92%"></div></div>
-<div class="week">
-<span>WED</span><span>9H</span>
-</div>
+<div id="weekly"></div>
 
 </div>
 
+<div class="card">
+
+<div class="stat-title">MONTH CALENDAR</div>
+
+<div id="monthTotal" style="font-size:24px;font-weight:700;margin-bottom:10px;">0H</div>
+
+<div class="calendar" id="calendar"></div>
+
 </div>
 
+<div class="card">
+
+<div class="stat-title">DAILY REVIEW</div>
+
+<textarea class="review" id="review"></textarea>
+
+</div>
+
+</div>
+
+<div class="modal-bg" id="modalBg">
+<div class="modal">
+
+<input type="text" id="subject" placeholder="과목">
+
+<input type="time" step="600" id="start">
+
+<input type="time" step="600" id="end">
+
+<input type="color" id="color" value="#7dd3fc">
+
+<button onclick="saveRoutine()">저장</button>
+
+<button onclick="deleteRoutine()" id="deleteBtn" style="background:#ffb4b4;margin-top:8px;">삭제</button>
+
+<button onclick="closeModal()" style="background:#222;color:#fff;margin-top:8px;">닫기</button>
+
+</div>
 </div>
 
 <script>
 
-const routines = [
-{
-subject:'헌법',
-start:'07:00',
-end:'09:00',
-color:'#7dd3fc'
-},
-{
-subject:'행정학',
-start:'10:00',
-end:'13:00',
-color:'#86efac'
-},
-{
-subject:'경제학',
-start:'15:00',
-end:'18:30',
-color:'#fca5a5'
-}
-];
+let routines = JSON.parse(localStorage.getItem('routines') || '[]');
+let goalMinutes = 480;
+let editIndex = -1;
 
-const goalStudyMinutes = 480;
-
-function timeToMinutes(t){
-const [h,m] = t.split(':').map(Number);
+function timeToMin(t){
+const [h,m]=t.split(':').map(Number);
 return h*60+m;
 }
 
 function polar(cx,cy,r,deg){
-const rad = (deg-90) * Math.PI / 180;
+const rad=(deg-90)*Math.PI/180;
 return {
-x: cx + r * Math.cos(rad),
-y: cy + r * Math.sin(rad)
+x:cx+r*Math.cos(rad),
+y:cy+r*Math.sin(rad)
 };
 }
 
-function describeArc(start,end){
+function arcPath(start,end){
 
-const startAngle = start/1440*360;
-const endAngle = end/1440*360;
+const sa=start/1440*360;
+const ea=end/1440*360;
 
-const s = polar(50,50,38,startAngle);
-const e = polar(50,50,38,endAngle);
+const s=polar(50,50,38,sa);
+const e=polar(50,50,38,ea);
 
-const large = endAngle - startAngle <= 180 ? 0 : 1;
+const large=ea-sa<=180?0:1;
 
 return `
 M 50 50
@@ -318,117 +369,243 @@ Z
 
 function renderTicks(){
 
-const wrap = document.getElementById('ticks');
+const wrap=document.getElementById('ticks');
 
-for(let h=0; h<24; h++){
+for(let h=0;h<24;h++){
 
-const angle = h/24*360;
+const angle=h/24*360;
 
-const outer = polar(50,50,47,angle);
-const inner = polar(50,50,h%2===0 ? 42 : 44,angle);
+const outer=polar(50,50,47,angle);
+const inner=polar(50,50,h%2===0?42:44,angle);
 
-const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+const line=document.createElementNS('http://www.w3.org/2000/svg','line');
 
 line.setAttribute('x1',outer.x);
 line.setAttribute('y1',outer.y);
 line.setAttribute('x2',inner.x);
 line.setAttribute('y2',inner.y);
 line.setAttribute('stroke','#333');
-line.setAttribute('stroke-width',h%2===0 ? '0.5':'0.2');
 
 wrap.appendChild(line);
 
 if(h%2===0){
 
-const txtPos = polar(50,50,49,angle);
+const pos=polar(50,50,49,angle);
 
-const text = document.createElementNS('http://www.w3.org/2000/svg','text');
-
-text.setAttribute('x',txtPos.x);
-text.setAttribute('y',txtPos.y);
-text.setAttribute('text-anchor','middle');
-text.setAttribute('dominant-baseline','middle');
-text.setAttribute('class','hour-label');
-
-text.textContent = h;
-
-wrap.appendChild(text);
-
-}
-
-}
-
-}
-
-function renderArcs(){
-
-const wrap = document.getElementById('arcs');
-
-let total = 0;
-
-routines.forEach(r=>{
-
-const start = timeToMinutes(r.start);
-const end = timeToMinutes(r.end);
-
-total += (end-start);
-
-const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-
-path.setAttribute('d',describeArc(start,end));
-path.setAttribute('fill',r.color);
-
-wrap.appendChild(path);
-
-const mid = (start+end)/2;
-const pos = polar(50,50,30,mid/1440*360);
-
-const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+const text=document.createElementNS('http://www.w3.org/2000/svg','text');
 
 text.setAttribute('x',pos.x);
 text.setAttribute('y',pos.y);
 text.setAttribute('text-anchor','middle');
 text.setAttribute('dominant-baseline','middle');
-text.setAttribute('class','time-label');
-
-text.textContent = r.subject;
+text.setAttribute('class','hour-label');
+text.textContent=h;
 
 wrap.appendChild(text);
 
-});
-
-const h = Math.floor(total/60);
-const m = total%60;
-
-document.getElementById('totalStudy').innerText =
-`${h}H ${m}M`;
-
-const focus = Math.round((total/goalStudyMinutes)*100);
-
-document.getElementById('focusVal').innerText = focus + '%';
+}
 
 }
 
-function renderList(){
+}
 
-const list = document.getElementById('routineList');
+function renderRoutines(){
 
-routines.forEach(r=>{
+const arcs=document.getElementById('arcs');
+const list=document.getElementById('routineList');
+
+arcs.innerHTML='';
+list.innerHTML='';
+
+let total=0;
+
+routines.forEach((r,i)=>{
+
+const start=timeToMin(r.start);
+const end=timeToMin(r.end);
+
+total += (end-start);
+
+const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+
+path.setAttribute('d',arcPath(start,end));
+path.setAttribute('fill',r.color);
+
+arcs.appendChild(path);
+
+const mid=(start+end)/2;
+const pos=polar(50,50,28,mid/1440*360);
+
+const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+
+text.setAttribute('x',pos.x);
+text.setAttribute('y',pos.y);
+text.setAttribute('text-anchor','middle');
+text.setAttribute('dominant-baseline','middle');
+text.setAttribute('class','routine-label');
+
+text.textContent=r.subject;
+
+arcs.appendChild(text);
 
 list.innerHTML += `
-<div class="item">
-
+<div class="list-item" onclick="editRoutine(${i})">
 <div class="left">
 <div class="dot" style="background:${r.color}"></div>
-
 <div>
 <div class="subject">${r.subject}</div>
 <div class="time">${r.start} - ${r.end}</div>
 </div>
+</div>
+<div>⋯</div>
+</div>
+`;
 
+});
+
+document.getElementById('todayTotal').innerText =
+`${Math.floor(total/60)}H ${total%60}M`;
+
+document.getElementById('focus').innerText =
+Math.round((total/goalMinutes)*100)+'%';
+
+}
+
+function openModal(){
+
+editIndex=-1;
+
+document.getElementById('modalBg').style.display='flex';
+
+document.getElementById('subject').value='';
+document.getElementById('start').value='';
+document.getElementById('end').value='';
+document.getElementById('deleteBtn').style.display='none';
+
+}
+
+function editRoutine(i){
+
+editIndex=i;
+
+const r=routines[i];
+
+document.getElementById('modalBg').style.display='flex';
+
+document.getElementById('subject').value=r.subject;
+document.getElementById('start').value=r.start;
+document.getElementById('end').value=r.end;
+document.getElementById('color').value=r.color;
+
+document.getElementById('deleteBtn').style.display='block';
+
+}
+
+function saveRoutine(){
+
+const subject=document.getElementById('subject').value;
+const start=document.getElementById('start').value;
+const end=document.getElementById('end').value;
+const color=document.getElementById('color').value;
+
+const startMin=timeToMin(start);
+const endMin=timeToMin(end);
+
+const overlap=routines.some((r,idx)=>{
+
+if(idx===editIndex) return false;
+
+const s=timeToMin(r.start);
+const e=timeToMin(r.end);
+
+return startMin < e && endMin > s;
+
+});
+
+if(overlap){
+alert('같은 시간대 루틴이 존재합니다.');
+return;
+}
+
+const obj={subject,start,end,color};
+
+if(editIndex>-1){
+routines[editIndex]=obj;
+}else{
+if(routines.length>=10){
+alert('카테고리 최대 10개');
+return;
+}
+routines.push(obj);
+}
+
+localStorage.setItem('routines',JSON.stringify(routines));
+
+closeModal();
+renderRoutines();
+
+}
+
+function deleteRoutine(){
+
+routines.splice(editIndex,1);
+
+localStorage.setItem('routines',JSON.stringify(routines));
+
+closeModal();
+renderRoutines();
+
+}
+
+function closeModal(){
+document.getElementById('modalBg').style.display='none';
+}
+
+function updateClock(){
+
+const now=new Date();
+
+const h=String(now.getHours()).padStart(2,'0');
+const m=String(now.getMinutes()).padStart(2,'0');
+
+document.getElementById('clock').innerText=`${h}:${m}`;
+
+const minute=now.getHours()*60+now.getMinutes();
+
+const deg=minute/1440*360;
+
+document.getElementById('needle')
+.setAttribute('transform',`rotate(${deg} 50 50)`);
+
+}
+
+function renderWeekly(){
+
+const weekly=document.getElementById('weekly');
+
+const sample=[
+['MON',420],
+['TUE',380],
+['WED',510],
+['THU',300],
+['FRI',450],
+['SAT',600],
+['SUN',520]
+];
+
+sample.forEach(v=>{
+
+weekly.innerHTML += `
+<div class="week-row">
+
+<div class="bar">
+<div class="fill" style="width:${Math.min(v[1]/6,100)}%"></div>
 </div>
 
-<div>⋯</div>
+<div class="week-label">
+<span>${v[0]}</span>
+<span>${Math.floor(v[1]/60)}H ${v[1]%60}M</span>
+</div>
 
 </div>
 `;
@@ -437,31 +614,97 @@ list.innerHTML += `
 
 }
 
-function updateClock(){
+function renderCalendar(){
 
-const now = new Date();
+const cal=document.getElementById('calendar');
 
-const h = String(now.getHours()).padStart(2,'0');
-const m = String(now.getMinutes()).padStart(2,'0');
+const now=new Date();
 
-document.getElementById('clock').innerText = `${h}:${m}`;
+const y=now.getFullYear();
+const m=now.getMonth();
 
-const minute = now.getHours()*60 + now.getMinutes();
+const last=new Date(y,m+1,0).getDate();
 
-const deg = minute/1440*360;
+let total=0;
 
-document.getElementById('needle')
-.setAttribute(
-'transform',
-`rotate(${deg} 50 50)`
-);
+for(let d=1;d<=last;d++){
+
+const study=Math.floor(Math.random()*10);
+
+total += study;
+
+cal.innerHTML += `
+<div class="day">
+<div>${d}</div>
+<div class="day-study">${study}H</div>
+</div>
+`;
 
 }
 
+document.getElementById('monthTotal').innerText =
+`${total}H`;
+
+}
+
+function saveDDay(){
+
+const val=document.getElementById('ddayInput').value;
+
+localStorage.setItem('dday',val);
+
+updateDDay();
+
+}
+
+function updateDDay(){
+
+const target=localStorage.getItem('dday');
+
+if(!target) return;
+
+document.getElementById('ddayInput').value=target;
+
+const diff=Math.ceil(
+(new Date(target)-new Date())/(1000*60*60*24)
+);
+
+document.getElementById('ddayVal').innerText='D-'+diff;
+
+}
+
+document.getElementById('goalInput').addEventListener('input',e=>{
+
+localStorage.setItem('goal',e.target.value);
+
+document.getElementById('goalText').innerText=e.target.value;
+
+});
+
+document.getElementById('review').addEventListener('input',e=>{
+
+e.target.style.height='auto';
+e.target.style.height=e.target.scrollHeight+'px';
+
+localStorage.setItem('review',e.target.value);
+
+});
+
 renderTicks();
-renderArcs();
-renderList();
+renderRoutines();
+renderWeekly();
+renderCalendar();
 updateClock();
+updateDDay();
+
+document.getElementById('goalText').innerText =
+localStorage.getItem('goal') || '';
+
+document.getElementById('goalInput').value =
+localStorage.getItem('goal') || '';
+
+document.getElementById('review').value =
+localStorage.getItem('review') || '';
 
 setInterval(updateClock,1000);
 
