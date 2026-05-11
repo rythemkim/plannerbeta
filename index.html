@@ -223,7 +223,6 @@ padding:0 12px;
 box-sizing:border-box;
 margin-bottom:10px;
 }
-.hidden{display:none;}
 .review{
 font-size:16px;
 width:100%;
@@ -258,75 +257,12 @@ border-radius:50%;
 background:#ffb4b4;
 margin-top:8px;
 }
-
-.bottom-tabs{
-position:fixed;
-left:50%;
-transform:translateX(-50%);
-bottom:14px;
-width:min(390px,calc(100% - 24px));
-background:rgba(15,15,15,.95);
-border:1px solid #222;
-border-radius:24px;
-display:flex;
-justify-content:space-around;
-padding:10px 0;
-backdrop-filter:blur(12px);
-z-index:999;
-}
-.tab{
-font-size:12px;
-color:#777;
-cursor:pointer;
-}
-.tab.active{
-color:#79dfff;
-}
-.todo-input,.money-input{
-width:100%;
-height:48px;
-background:#0d0d0d;
-border:none;
-border-radius:14px;
-padding:0 14px;
-box-sizing:border-box;
-color:#fff;
-font-size:16px;
-margin-bottom:10px;
-}
-.todo-item,.money-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px 0;
-border-bottom:1px solid #181818;
-}
-.todo-done{
-text-decoration:line-through;
-color:#666;
-}
-.check{
-width:18px;
-height:18px;
-border-radius:50%;
-border:1px solid #555;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-margin-right:12px;
-}
-.todo-left{
-display:flex;
-align-items:center;
-}
 </style>
-
 </head>
 
 <body>
 
-<div class="app"><div id="planPage">
+<div class="app">
 
 <div class="header">
 <div class="logo">I'll WIN</div>
@@ -386,7 +322,7 @@ align-items:center;
 
 <div style="display:flex;gap:12px;align-items:center;">
 <div onclick="changeMonth(-1)" style="cursor:pointer;color:#79dfff;">‹</div>
-<div id="monthLabel" style="font-size:12px;color:#aaa;"></div><div onclick="goToday()" style="font-size:11px;padding:5px 10px;border-radius:999px;background:#111;border:1px solid #222;cursor:pointer;">TODAY</div>
+<div id="monthLabel" style="font-size:12px;color:#aaa;"></div>
 <div onclick="changeMonth(1)" style="cursor:pointer;color:#79dfff;">›</div>
 </div>
 
@@ -405,53 +341,9 @@ align-items:center;
 
 </div>
 
-
-</div>
-
-<div id="todoPage" class="hidden">
-
-<div class="logo">TODO</div>
-
-<div class="card">
-
-<input class="todo-input" id="todoInput" placeholder="할 일 입력 후 Enter">
-
-<div id="todoList"></div>
-
-</div>
-
-</div>
-
-<div id="moneyPage" class="hidden">
-
-<div class="logo">MONEY</div>
-
-<div class="card">
-
-<input class="money-input" id="moneyText" placeholder="내용">
-<input class="money-input" id="moneyAmount" placeholder="금액">
-
-<button onclick="addMoney()">+ 지출 추가</button>
-
-<div id="todayMoney" style="margin-top:16px;font-size:14px;"></div>
-<div id="monthMoney" style="margin-top:6px;font-size:14px;color:#79dfff;"></div>
-
-<div id="moneyList"></div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="bottom-tabs">
-<div class="tab active" onclick="showPage('plan')">PLAN</div>
-<div class="tab" onclick="showPage('todo')">TODO</div>
-<div class="tab" onclick="showPage('money')">MONEY</div>
 </div>
 
 <div class="modal-bg" id="routineModal">
-
 <div class="modal">
 
 <input id="subject" placeholder="과목">
@@ -807,191 +699,6 @@ onclick="changeDate('${dateKey}')">
 function changeMonth(diff){
 
 currentMonthDate.setMonth(currentMonthDate.getMonth()+diff);
-
-
-function goToday(){
-selectedDate = new Date().toISOString().split('T')[0];
-currentMonthDate = new Date();
-renderCalendar();
-renderRoutines();
-}
-
-function showPage(page){
-
-document.getElementById('planPage').classList.add('hidden');
-document.getElementById('todoPage').classList.add('hidden');
-document.getElementById('moneyPage').classList.add('hidden');
-
-document.querySelectorAll('.tab').forEach(v=>v.classList.remove('active'));
-
-if(page==='plan'){
-document.getElementById('planPage').classList.remove('hidden');
-document.querySelectorAll('.tab')[0].classList.add('active');
-}
-
-if(page==='todo'){
-document.getElementById('todoPage').classList.remove('hidden');
-document.querySelectorAll('.tab')[1].classList.add('active');
-renderTodos();
-}
-
-if(page==='money'){
-document.getElementById('moneyPage').classList.remove('hidden');
-document.querySelectorAll('.tab')[2].classList.add('active');
-renderMoney();
-}
-
-}
-
-function renderTodos(){
-
-const list=document.getElementById('todoList');
-
-if(!currentData().todos){
-currentData().todos=[];
-}
-
-list.innerHTML='';
-
-currentData().todos.forEach((t,idx)=>{
-
-list.innerHTML += `
-<div class="todo-item">
-
-<div class="todo-left">
-
-<div class="check" onclick="toggleTodo(${idx})">
-${t.done ? '✓' : ''}
-</div>
-
-<div class="${t.done ? 'todo-done' : ''}">
-${t.text}
-</div>
-
-</div>
-
-</div>
-`;
-
-});
-
-}
-
-function toggleTodo(idx){
-
-currentData().todos[idx].done =
-!currentData().todos[idx].done;
-
-saveDB();
-
-renderTodos();
-
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-
-const todoInput=document.getElementById('todoInput');
-
-if(todoInput){
-
-todoInput.addEventListener('keypress',e=>{
-
-if(e.key==='Enter'){
-
-const value=e.target.value.trim();
-
-if(!value) return;
-
-if(!currentData().todos){
-currentData().todos=[];
-}
-
-currentData().todos.push({
-text:value,
-done:false
-});
-
-e.target.value='';
-
-saveDB();
-
-renderTodos();
-
-}
-
-});
-
-}
-
-});
-
-function addMoney(){
-
-const text=document.getElementById('moneyText').value.trim();
-const amount=Number(document.getElementById('moneyAmount').value);
-
-if(!text || !amount) return;
-
-if(!currentData().money){
-currentData().money=[];
-}
-
-currentData().money.push({text,amount});
-
-document.getElementById('moneyText').value='';
-document.getElementById('moneyAmount').value='';
-
-saveDB();
-
-renderMoney();
-
-}
-
-function renderMoney(){
-
-const list=document.getElementById('moneyList');
-
-if(!currentData().money){
-currentData().money=[];
-}
-
-list.innerHTML='';
-
-let todayTotal=0;
-
-currentData().money.forEach(v=>{
-
-todayTotal += v.amount;
-
-list.innerHTML += `
-<div class="money-row">
-<div>${v.text}</div>
-<div>${v.amount.toLocaleString()}원</div>
-</div>
-`;
-
-});
-
-let monthTotal=0;
-
-Object.keys(db).forEach(key=>{
-
-if(!db[key]?.money) return;
-
-db[key].money.forEach(v=>{
-monthTotal += v.amount;
-});
-
-});
-
-document.getElementById('todayMoney').innerText =
-'오늘 지출: ' + todayTotal.toLocaleString() + '원';
-
-document.getElementById('monthMoney').innerText =
-'월 지출: ' + monthTotal.toLocaleString() + '원';
-
-}
-
 
 renderCalendar();
 
